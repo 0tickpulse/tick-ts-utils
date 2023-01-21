@@ -2,43 +2,6 @@ import { equalsFunction } from "../functions/functions.js";
 
 /**
  * A class that can be used to match a value against a pattern. Used as an alternative to a `switch` statement.
- * Main document can be found here: {@link match}.
- *
- * @class Match
- * @template T The type of the value to match against.
- * @template R The type of the result.
- */
-class Match<T, R> {
-    constructor(private readonly value: T) {}
-    #withs: [(value: T) => boolean, R][] = [];
-    withFunc(pattern: (value: T) => boolean, result: R) {
-        this.#withs.push([pattern, result]);
-        return this;
-    }
-    withEquals(value: T, result: R) {
-        return this.withFunc(equalsFunction<T>(value), result);
-    }
-    withInList(values: T[], result: R) {
-        return this.withFunc((v) => values.includes(v), result);
-    }
-    otherwise(result: R) {
-        return this.matches()?.[1] ?? result;
-    }
-    matches() {
-        return this.#withs.find(([pattern]) => pattern(this.value));
-    }
-    get() {
-        if (this.matches()) {
-            return this.otherwise(undefined as R);
-        }
-        throw new Error("No match found.");
-    }
-}
-
-/**
- * TL;DR: Creates a new {@link Match} object that can be used to match a value against a pattern. Used as an alternative to a `switch` statement.
- *
- * These are the same as the generic parameters of the {@link Match} class and will be passed on.
  *
  * # The Matcher
  *
@@ -76,8 +39,33 @@ class Match<T, R> {
  *
  * The {@link Match} object is obviously not as performant as a `switch` statement. However, in most cases, the performance difference is negligible.
  *
- * @param value The value to match against.
+ * @class Match
  * @template T The type of the value to match against.
  * @template R The type of the result.
  */
-export const match = <T, R>(value: T) => new Match<T, R>(value);
+export class Match<T, R> {
+    constructor(private readonly value: T) {}
+    #withs: [(value: T) => boolean, R][] = [];
+    withFunc(pattern: (value: T) => boolean, result: R) {
+        this.#withs.push([pattern, result]);
+        return this;
+    }
+    withEquals(value: T, result: R) {
+        return this.withFunc(equalsFunction<T>(value), result);
+    }
+    withInList(values: T[], result: R) {
+        return this.withFunc((v) => values.includes(v), result);
+    }
+    otherwise(result: R) {
+        return this.matches()?.[1] ?? result;
+    }
+    matches() {
+        return this.#withs.find(([pattern]) => pattern(this.value));
+    }
+    get() {
+        if (this.matches()) {
+            return this.otherwise(undefined as R);
+        }
+        throw new Error("No match found.");
+    }
+}
