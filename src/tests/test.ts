@@ -1,4 +1,4 @@
-import { match } from "../match/match.js";
+import { Match } from "../match/match.js";
 
 function expect<T>(actual: T) {
     let index = 1;
@@ -13,7 +13,7 @@ function expect<T>(actual: T) {
     };
 }
 
-const result = match<number, string>(5)
+const result = new Match<number, string>(5)
     .withEquals(1, "hello")
     .withEquals(2, "world")
     .withEquals(3, "foo")
