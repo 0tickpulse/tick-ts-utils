@@ -7,4 +7,5 @@ export * from "./strings/toString.js";
 export * from "./terminal/ansiCodes.js";
 export * from "./types/objectTypes.js";
 export * from "./types/tupleTypes.js";
+export * from "./taggedTemplateLiterals.js"
 
