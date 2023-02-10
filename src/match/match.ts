@@ -1,5 +1,7 @@
 import { equalsFunction } from "../functions/functions.js";
 
+type Pattern<T, R> = [(value: T) => boolean, R];
+
 /**
  * A class that can be used to match a value against a pattern. Used as an alternative to a `switch` statement.
  *
@@ -18,11 +20,29 @@ import { equalsFunction } from "../functions/functions.js";
  * const result = match(5)
  *     .withEquals(5, "five")
  *     .withEquals(6, "six")
- *     .otherwise("other");
+ *     // ...
  * ```
+ * 
+ * Compare this with a `switch` statement:
+ * 
+ * ```ts
+ * let result: string;
+ * switch (5) {
+ *     case 5:
+ *         result = "five";
+ *         break;
+ *     case 6:
+ *         result = "six";
+ *         break;
+ *  // ...
+ * }
+ * ```
+ * 
+ * As you can see, the switch statement requires a lot more text.
+ * Looking at the two different approaches, it is clear that the {@link Match} object is more concise than a `switch` statement.
  *
  * Keep in mind that the order in which you add patterns matters. The first pattern that matches the value will be used.
- * Furthermore, there are several utility methods you can use to add patterns, such as {@link Match#withEquals} and {@link Match#withInList}.
+ * There are several utility methods you can use to add patterns, such as {@link Match#withEquals} and {@link Match#withInList}.
  * More information about these methods can be found in their documentation.
  *
  * ## Extracting the result
@@ -38,31 +58,86 @@ import { equalsFunction } from "../functions/functions.js";
  * ## Performance
  *
  * The {@link Match} object is obviously not as performant as a `switch` statement. However, in most cases, the performance difference is negligible.
+ * (If you are worried about performance to this extent, you should probably not be using JavaScript in the first place.)
  *
- * @class Match
  * @template T The type of the value to match against.
  * @template R The type of the result.
  */
 export class Match<T, R> {
-    constructor(private readonly value: T) {}
-    #withs: [(value: T) => boolean, R][] = [];
-    withFunc(pattern: (value: T) => boolean, result: R) {
-        this.#withs.push([pattern, result]);
+    #patterns: Pattern<T, R>[] = [];
+    /**
+     * Creates a new {@link Match} object.
+     *
+     * @param value    The value to match against.
+     * @param patterns The patterns to match against. This is an array of tuples, where the first element is a function that returns a boolean based on whether the pattern matches or not, and the second element is the result to return if the pattern matches. **Best to leave this empty and use the various `with` methods instead**.
+     */
+    constructor(private readonly value: T, ...patterns: Pattern<T, R>[]) {
+        this.#patterns = patterns;
+    }
+    /**
+     * Adds a pattern to the {@link Match} object based on a function.
+     *
+     * @param pattern The pattern to match against. This should return a boolean based on whether the pattern matches or not.
+     * @param result  The result to return if the pattern matches.
+     * @returns The object itself for method chaining.
+     */
+    withFunc(pattern: (value: T) => boolean, result: R): this {
+        this.#patterns.push([pattern, result]);
         return this;
     }
-    withEquals(value: T, result: R) {
+    /**
+     * Adds a pattern to the {@link Match} object based on a value.
+     * This is a shortcut for {@link Match#withFunc} with `(value) => value === X` (where `X` is the value to match against).
+     *
+     * @param value  The value to match against.
+     * @param result The result to return if the pattern matches.
+     * @returns The object itself for method chaining.
+     */
+    withEquals(value: T, result: R): this {
         return this.withFunc(equalsFunction<T>(value), result);
     }
-    withInList(values: T[], result: R) {
+    /**
+     * Adds a pattern to the {@link Match} object based on a value array. It will match if `array.includes(value)`.
+     * This is a shortcut for {@link Match#withFunc} with `(value) => values.includes(value)`.
+     *
+     * @param values The value array to match against.
+     * @param result The result to return if the pattern matches.
+     * @returns The object itself for method chaining.
+     */
+    withInList(values: T[], result: R): this {
         return this.withFunc((v) => values.includes(v), result);
     }
-    otherwise(result: R) {
+    /**
+     * Extracts the first matching result from the {@link Match} object. If no pattern matches, it returns the default value.
+     *
+     * @param result The result to return if no pattern matches.
+     * @returns The first matching result, or the default value if no pattern matches.
+     */
+    otherwise(result: R): R {
         return this.matches()?.[1] ?? result;
     }
-    matches() {
-        return this.#withs.find(([pattern]) => pattern(this.value));
+    /**
+     * Iterates over all patterns and finds a matching result.
+     *
+     * @example
+     * ```ts
+     * const result = match(5)
+     *     .withEquals(5, "five")
+     *     .withEquals(6, "six")
+     *     .matches();
+     *     // [(x) => x === 5, "five"]
+     * ```
+     *
+     * @returns The first matching result as a two-sized array where the first element is the function for the matcher, and the second is the result, or `undefined` if no pattern matches.
+     */
+    matches(): Pattern<T, R> | undefined {
+        return this.#patterns.find(([pattern]) => pattern(this.value));
     }
-    get() {
+    /**
+     * Gets the first matching result from the {@link Match} object. If no pattern matches, it throws an error.
+     * @returns The first matching result, or throws an error if no pattern matches.
+     */
+    get(): R {
         if (this.matches()) {
             return this.otherwise(undefined as R);
         }

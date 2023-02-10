@@ -17,6 +17,7 @@
         "eslint-plugin-tsdoc"
     ],
     "rules": {
-        "@typescript-eslint/no-namespace": "off"
+        "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/explicit-function-return-type": "error"
     }
 }

@@ -1,12 +1,12 @@
-
 export function color(string: string, code: string): string {
     return `${code}${string}${codes.reset}`;
 }
-export function colorBasic(string: string, color: string): string {
-    return `${basic[color]}${string}${codes.reset}`;
+export function colorBasic(string: string, color: keyof typeof basic): string {
+    return `${basic[color].fore}${string}${codes.reset}`;
 }
 /**
  * Returns a color code from a SGR parameter.
+ *
  * @param code The SGR parameter to use. [Explanation]{@link https://en.wikipedia.org/wiki/ANSI_escape_code}
  */
 export function fromSGR(code: number | string): string {
@@ -15,6 +15,7 @@ export function fromSGR(code: number | string): string {
 
 /**
  * Generates a color code that changes the font to an alternative font.
+ *
  * @param code The code.
  */
 export function alternativeFont(code: number): string {
@@ -22,6 +23,7 @@ export function alternativeFont(code: number): string {
 }
 /**
  * Gets a color code that changes the foreground color of console output to a certain RGB value.
+ *
  * @param r The red value of the color.
  * @param g The green value of the color.
  * @param b The blue value of the color.
@@ -31,6 +33,7 @@ export function foregroundColor(r: number, g: number, b: number): string {
 }
 /**
  * Gets a color code that changes the background color of console output to a certain RGB value.
+ *
  * @param r The red value of the color.
  * @param g The green value of the color.
  * @param b The blue value of the color.
@@ -40,6 +43,7 @@ export function backgroundColor(r: number, g: number, b: number): string {
 }
 /**
  * Gets a color code that changes the underline color of console output to a certain RGB value.
+ *
  * @param r The red value of the color.
  * @param g The green value of the color.
  * @param b The blue value of the color.
@@ -48,6 +52,9 @@ export function underlineColor(r: number, g: number, b: number): string {
     return fromSGR(`58;2;${r};${g};${b}`);
 }
 
+/**
+ * A library of all singular ANSI color codes.
+ */
 export const codes = {
     /** All attributes off */
     reset: fromSGR(0),
@@ -117,18 +124,19 @@ export const codes = {
     /** Only implemented in minty. */
     subscript: fromSGR(74),
     /** Only implemented in minty. */
-    superscriptSubscriptReset: fromSGR(75)
+    superscriptSubscriptReset: fromSGR(75),
 };
 /**
  * Converts a RGB color to a map of foreground, background, and underline console color codes.
- * @param red The red value of the color.
+ *
+ * @param red   The red value of the color.
  * @param green The green value of the color.
- * @param blue The blue value of the color.
+ * @param blue  The blue value of the color.
  */
-export const generateBasic = (red: number, green: number, blue: number) => {
+export const generateBasic = (red: number, green: number, blue: number): { fore: string; back: string; under: string; } => {
     return { fore: foregroundColor(red, green, blue), back: backgroundColor(red, green, blue), under: underlineColor(red, green, blue) };
 };
-export const basic: { [key: string]: { fore: string, back: string, under: string } } = {
+export const basic = {
     red: generateBasic(255, 0, 0),
     blue: generateBasic(0, 255, 0),
     cyan: generateBasic(102, 235, 244),
@@ -141,5 +149,5 @@ export const basic: { [key: string]: { fore: string, back: string, under: string
     purple: generateBasic(128, 0, 128),
     brown: generateBasic(165, 42, 42),
     pink: generateBasic(255, 192, 203),
-    gray: generateBasic(128, 128, 12)
-};
+    gray: generateBasic(128, 128, 12),
+} satisfies { [key: string]: { fore: string; back: string; under: string } };
