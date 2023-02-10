@@ -1,4 +1,4 @@
-import { stringify } from "./toString";
+import { stringify } from "./toString.js";
 
 /**
  * A mutable string builder.
