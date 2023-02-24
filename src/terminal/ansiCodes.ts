@@ -149,5 +149,5 @@ export const basic = {
     purple: generateBasic(128, 0, 128),
     brown: generateBasic(165, 42, 42),
     pink: generateBasic(255, 192, 203),
-    gray: generateBasic(128, 128, 12),
+    gray: generateBasic(128, 128, 128),
 } satisfies { [key: string]: { fore: string; back: string; under: string } };
