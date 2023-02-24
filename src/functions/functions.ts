@@ -12,7 +12,7 @@ export function equalsFunction<T>(expected: T): (object: T) => boolean {
 }
 
 /**
- * A function that simply... does nothing. Useful for some certain situations that require a function.
+ * A function that simply... does nothing. Useful for some certain situations that require a consumer function but you don't want to do anything with the value.
  */
 export function emptyFunction(): void {
     // This is an empty function.
@@ -26,3 +26,4 @@ export function emptyFunction(): void {
 export function identityFunction<T>(value: T): T {
     return value;
 }
+

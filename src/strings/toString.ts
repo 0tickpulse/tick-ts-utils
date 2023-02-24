@@ -1,5 +1,5 @@
 /**
- * Null-safe string conversion.
+ * Null-and-undefined-safe string conversion.
  *
  * @param value The value to convert to a string.
  * @returns The string representation of the value.

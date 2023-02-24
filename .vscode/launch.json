@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Run current file",
+            "type": "node",
+            "request": "launch",
+            "program": "${file}",
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": "node",
+        }
+    ]
+}

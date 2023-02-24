@@ -23,10 +23,24 @@
  * 1. If the values are strictly equal (`===`), `true` will be returned.
  * 1. If either value is `undefined`, `false` will be returned.
  * 1. If either value is `null`, `true` will be returned.
- * 1. If the types of the values are not equal, `false` will be returned.
+ * 1. If the types of the values are not equal (using `typeof`), `false` will be returned.
  * 1. If the values are both arrays, all of the elements will be compared recursively.
  * 1. If the values are both objects, the keys of the objects will be compared.
  * 1. Finally, returns `false`.
+ *
+ * If you want to implement your own `equals` method, you can increase type safety by using the {@link DeepEquals} type. For example:
+ *
+ * ```ts
+ * class MyClass implements DeepEquals {
+ *     constructor(public value: number) {}
+ *     equals(other: unknown): boolean {
+ *          if (!(other instanceof MyClass)) {
+ *              return false;
+ *          }
+ *          return this.value === other.value;
+ *     }
+ * }
+ * ```
  *
  * @param value1 The first value to compare.
  * @param value2 The second value to compare.
@@ -82,8 +96,17 @@ function hasEqualFunction<T>(value: T): value is T & { equals: (other: unknown) 
     return (
         value !== null &&
         value !== undefined &&
-        Object.prototype.hasOwnProperty.call(value, "equals") &&
+        typeof value === "object" &&
+        "equals" in value &&
         typeof (value as unknown as { equals: unknown }).equals === "function" &&
         (value as unknown as { equals: (other: unknown) => boolean }).equals.length === 1
     );
+}
+
+/**
+ * This interface represents a type that can be compared for deep equality.
+ * This is used to allow objects to define their own equality logic.
+ */
+export interface DeepEquals {
+    equals(other: unknown): boolean;
 }

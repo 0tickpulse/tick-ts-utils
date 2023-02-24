@@ -1,6 +1,14 @@
 import { equalsFunction } from "../functions/functions.js";
+import { Optional } from "../resultsAndOptionals/optionals.js";
+import { Result } from "../resultsAndOptionals/results.js";
 
 type Pattern<T, R> = [(value: T) => boolean, R];
+
+export class NoMatchError extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
 
 /**
  * A class that can be used to match a value against a pattern. Used as an alternative to a `switch` statement.
@@ -22,9 +30,9 @@ type Pattern<T, R> = [(value: T) => boolean, R];
  *     .withEquals(6, "six")
  *     // ...
  * ```
- * 
+ *
  * Compare this with a `switch` statement:
- * 
+ *
  * ```ts
  * let result: string;
  * switch (5) {
@@ -37,7 +45,7 @@ type Pattern<T, R> = [(value: T) => boolean, R];
  *  // ...
  * }
  * ```
- * 
+ *
  * As you can see, the switch statement requires a lot more text.
  * Looking at the two different approaches, it is clear that the {@link Match} object is more concise than a `switch` statement.
  *
@@ -134,13 +142,16 @@ export class Match<T, R> {
         return this.#patterns.find(([pattern]) => pattern(this.value));
     }
     /**
-     * Gets the first matching result from the {@link Match} object. If no pattern matches, it throws an error.
-     * @returns The first matching result, or throws an error if no pattern matches.
+     * Gets the first matching result from the {@link Match} object as a {@link result!Result} object. If no pattern matches, it returns a result containing a {@link NoMatchError}.
+     * @returns The first matching result, or throws a {@link NoMatchError} if no pattern matches.
      */
-    get(): R {
+    get(): Result<R, NoMatchError> {
         if (this.matches()) {
-            return this.otherwise(undefined as R);
+            return Result.ok(this.otherwise(undefined as R));
         }
-        throw new Error("No match found.");
+        return Result.error(new NoMatchError("No pattern matched the value"));
+    }
+    getAsOptional(): Optional<R> {
+        return Optional.of(this.otherwise(undefined as R));
     }
 }

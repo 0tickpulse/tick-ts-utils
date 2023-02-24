@@ -1,7 +1,17 @@
-import { deepEquals } from "./deepEquals.js";
+import { DeepEquals, deepEquals } from "./deepEquals.js";
 
 class TestClass {
     constructor(public a: number, public b: number) {}
+}
+
+class TestClassWithEquals implements DeepEquals {
+    constructor(public a: number, public b: number) {}
+    equals(other: unknown): boolean {
+        if (!(other instanceof TestClassWithEquals)) {
+            return false;
+        }
+        return this.a + this.b === other.a + other.b;
+    }
 }
 
 test("deepEquals with primitive values", () => {
@@ -40,3 +50,9 @@ test("deepEquals with instances of classes", () => {
     expect(deepEquals(new TestClass(1, 2), new TestClass(1, 2))).toEqual(true);
 });
 
+test("deepEquals with instances of classes with equals method", () => {
+    const obj = new TestClassWithEquals(1, 2);
+    expect(deepEquals(new TestClassWithEquals(1, 2), new TestClassWithEquals(1, 2))).toEqual(true);
+    expect(deepEquals(new TestClassWithEquals(1, 2), new TestClassWithEquals(2, 1))).toEqual(true);
+    expect(deepEquals(new TestClassWithEquals(1, 2), new TestClassWithEquals(3, 4))).toEqual(false);
+});
