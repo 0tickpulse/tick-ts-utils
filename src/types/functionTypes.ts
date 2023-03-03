@@ -22,5 +22,7 @@
  * // This is how you would use the normal function.
  * add(1, 2); // 3
  * ```
+ *
+ * @category Types
  */
 export type Curry<T extends readonly unknown[]> = T extends [infer A, ...infer B] ? B["length"] extends 0 ? A : (a: A) => Curry<B> : T[0];

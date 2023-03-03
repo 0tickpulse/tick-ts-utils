@@ -4,6 +4,11 @@ import { Result } from "../resultsAndOptionals/results.js";
 
 type Pattern<T, R> = [(value: T) => boolean, R];
 
+/**
+ * Represents an error that occurs when a {@link Match} object does not match any of the patterns.
+ *
+ * @category Pattern Matching
+ */
 export class NoMatchError extends Error {
     constructor(message: string) {
         super(message);
@@ -70,6 +75,7 @@ export class NoMatchError extends Error {
  *
  * @template T The type of the value to match against.
  * @template R The type of the result.
+ * @category Pattern Matching
  */
 export class Match<T, R> {
     #patterns: Pattern<T, R>[] = [];

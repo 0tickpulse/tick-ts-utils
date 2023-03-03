@@ -57,6 +57,7 @@ import { isTypedArray } from "util/types";
  *
  * @param value The value to deep clone.
  * @returns The deep clone of the value.
+ * @category Cloning
  */
 export function deepClone<T>(value: T): T {
     if (hasDeepCloneMethod(value)) {
@@ -127,6 +128,9 @@ function hasDeepCloneMethod<T>(value: T): value is T & { deepClone(): T } {
 /**
  * This interface represents a type that can be deep cloned.
  * This is used to allow objects to define their own cloning logic.
+ *
+ * @see {@link deepClone} This function uses this interface to allow objects to define their own cloning logic.
+ * @category Cloning
  */
 export interface Cloneable<T> {
     /**

@@ -1,3 +1,8 @@
+/**
+ * An error that is thrown when trying to get the value of an empty Optional.
+ *
+ * @category Typeguarding
+ */
 export class NoValueInOptionalError extends Error {
     constructor(message: string) {
         super(message);
@@ -6,9 +11,10 @@ export class NoValueInOptionalError extends Error {
 
 /**
  * A container that may or may not contain a non-null-or-undefined value.
+ *
+ * @category Typeguarding
  */
 export class Optional<T> {
-    static readonly #empty = new Optional<never>(undefined);
     readonly #value: T | undefined;
     /**
      * Creates a new Optional with a value.
@@ -114,8 +120,8 @@ export class Optional<T> {
     /**
      * Returns an empty Optional.
      */
-    static empty(): Optional<never> {
-        return Optional.#empty;
+    static empty<T>(): Optional<T> {
+        return new Optional<T>(undefined);
     }
     /**
      * Returns an optional of a given value, or an empty optional if the value is null or undefined.

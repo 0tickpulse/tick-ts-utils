@@ -22,6 +22,8 @@ function createRawTemplateLiteralTransformer(transform: (s: string) => string) {
  * `;
  * // "Hello\nWorld"
  * ```
+ *
+ * @category Strings
  */
 export const stripIndentation = createRawTemplateLiteralTransformer((s) => {
     const lines = s.split(/\r?\n/);

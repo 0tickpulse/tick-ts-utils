@@ -1,5 +1,15 @@
+/**
+ * An error that occurs when getting a {@link Result} object that contains an error.
+ *
+ * @category Typeguarding
+ */
 export class GetErrorResult extends Error {}
 
+/**
+ * A Result is a type that can either be a success value or an error.
+ *
+ * @category Typeguarding
+ */
 export class Result<T, E> {
     constructor(public value: T | undefined, readonly error: E | undefined) {}
     static ok<T, E>(value: T): Result<T, E> {

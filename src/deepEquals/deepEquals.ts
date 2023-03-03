@@ -45,6 +45,7 @@
  * @param value1 The first value to compare.
  * @param value2 The second value to compare.
  * @returns `true` if the values are deeply equal, `false` otherwise.
+ * @category Equality
  */
 export function deepEquals(value1: unknown, value2: unknown): boolean {
     if (hasEqualFunction(value1)) {
@@ -83,7 +84,7 @@ export function deepEquals(value1: unknown, value2: unknown): boolean {
             return false;
         }
         for (const key of aKeys) {
-            if (!deepEquals((value1 as Record<string, unknown>)[key], (value2 as Record<string, unknown>)[key])) {
+            if (!deepEquals((value1 as Record<PropertyKey, unknown>)[key], (value2 as Record<PropertyKey, unknown>)[key])) {
                 return false;
             }
         }
@@ -106,6 +107,8 @@ function hasEqualFunction<T>(value: T): value is T & { equals: (other: unknown) 
 /**
  * This interface represents a type that can be compared for deep equality.
  * This is used to allow objects to define their own equality logic.
+ *
+ * @category Equality
  */
 export interface DeepEquals {
     equals(other: unknown): boolean;

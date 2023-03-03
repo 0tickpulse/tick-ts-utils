@@ -1,7 +1,7 @@
 {
     "type": "module",
-    "name": "tick-ts-utils",
-    "version": "2.1.0",
+    "name": "@tick/utils",
+    "version": "3.0.0",
     "description": "Bunch of utilities I personally use for TypeScript.",
     "main": "out/index.js",
     "scripts": {
@@ -10,8 +10,8 @@
         "watch": "tsc -b -w",
         "clean": "rm -rf out",
         "cleanWindows": "rmdir /s /q out",
-        "typedoc": "npx typedoc --out docs ./src",
-        "prettier": "npx prettier -w ./src"
+        "typedoc": "pnpm exec typedoc --out docs ./src",
+        "prettier": "pnpm exec prettier -w ./src"
     },
     "author": "0TickPulse",
     "license": "AGPL-3.0-or-later",

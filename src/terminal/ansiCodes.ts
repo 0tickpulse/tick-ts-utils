@@ -8,6 +8,7 @@ export function colorBasic(string: string, color: keyof typeof basic): string {
  * Returns a color code from a SGR parameter.
  *
  * @param code The SGR parameter to use. [Explanation]{@link https://en.wikipedia.org/wiki/ANSI_escape_code}
+ * @category Terminal
  */
 export function fromSGR(code: number | string): string {
     return `\x1b[${code}m`;
@@ -17,6 +18,7 @@ export function fromSGR(code: number | string): string {
  * Generates a color code that changes the font to an alternative font.
  *
  * @param code The code.
+ * @category Terminal
  */
 export function alternativeFont(code: number): string {
     return fromSGR(10 + code);
@@ -27,6 +29,7 @@ export function alternativeFont(code: number): string {
  * @param r The red value of the color.
  * @param g The green value of the color.
  * @param b The blue value of the color.
+ * @category Terminal
  */
 export function foregroundColor(r: number, g: number, b: number): string {
     return fromSGR(`38;2;${r};${g};${b}`);
@@ -47,6 +50,7 @@ export function backgroundColor(r: number, g: number, b: number): string {
  * @param r The red value of the color.
  * @param g The green value of the color.
  * @param b The blue value of the color.
+ * @category Terminal
  */
 export function underlineColor(r: number, g: number, b: number): string {
     return fromSGR(`58;2;${r};${g};${b}`);
@@ -54,6 +58,7 @@ export function underlineColor(r: number, g: number, b: number): string {
 
 /**
  * A library of all singular ANSI color codes.
+ * @category Terminal
  */
 export const codes = {
     /** All attributes off */
@@ -132,6 +137,7 @@ export const codes = {
  * @param red   The red value of the color.
  * @param green The green value of the color.
  * @param blue  The blue value of the color.
+ * @category Terminal
  */
 export const generateBasic = (red: number, green: number, blue: number): { fore: string; back: string; under: string; } => {
     return { fore: foregroundColor(red, green, blue), back: backgroundColor(red, green, blue), under: underlineColor(red, green, blue) };

@@ -5,6 +5,8 @@ import { stringify } from "./toString.js";
  * A mutable string builder.
  *
  * String builders are useful for producing large strings.
+ *
+ * @category Strings
  */
 export class StringBuilder implements Cloneable<StringBuilder> {
     #chars: string[] = [];

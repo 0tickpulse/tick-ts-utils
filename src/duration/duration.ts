@@ -14,6 +14,44 @@ const DURATION_MAP: Record<string, number> = {
 
 /**
  * Immutable class representing a duration of time.
+ *
+ * ## Motivation
+ *
+ * Durations in JavaScript are usually represented as numbers, which can be confusing.
+ * This means that functions have to specify what unit the number is in, leading to many inconsistencies throughout different codebases.
+ * This class solves this problem by providing a way to represent durations in a way that is easy to understand.
+ *
+ * ```ts
+ * function doSomethingAfter(duration: number) {
+ *     // ...
+ * }
+ * ```
+ *
+ * This function is very confusing. What unit is the number in? Is it in milliseconds? Seconds? Minutes?
+ * You can solve this by changing the parameter name to something like `durationms`, but this, at least in my opinion, is verbose and ugly.
+ * In addition, the inconsistencies mean that you have to convert units all the time:
+ *
+ * ```ts
+ * const myMinutes = getFromAPI();
+ * doSomethingAfter(myMinutes * 60 * 1000);
+ * ```
+ *
+ * This is very confusing, and it is easy to make mistakes.
+ *
+ * Compare this to the following code:
+ *
+ * ```ts
+ * function doSomethingAfter(duration: Duration) {
+ *     // ...
+ * }
+ *
+ * const duration = getFromAPI();
+ * doSomethingAfter(duration);
+ * ```
+ *
+ * This is much more readable and understandable. The code is also much more concise.
+ *
+ * @category Duration
  */
 export class Duration {
     constructor(public readonly milliseconds: number) {}

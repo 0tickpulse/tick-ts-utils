@@ -1,3 +1,4 @@
+import { Curry } from "../index.js";
 import { Match } from "../match/match.js";
 
 /**
@@ -6,6 +7,7 @@ import { Match } from "../match/match.js";
  * This is the backend for {@link Match#addEquals}.
  *
  * @param expected The expected value to compare against.
+ * @category Functions
  */
 export function equalsFunction<T>(expected: T): (object: T) => boolean {
     return (actual: T) => {
@@ -15,6 +17,8 @@ export function equalsFunction<T>(expected: T): (object: T) => boolean {
 
 /**
  * A function that simply... does nothing. Useful for some certain situations that require a consumer function but you don't want to do anything with the value.
+ *
+ * @category Functions
  */
 export function emptyFunction(): void {
     // This is an empty function.
@@ -24,8 +28,19 @@ export function emptyFunction(): void {
  * A function that simply returns the value that was passed in. Useful for some certain situations that require a transformation function but you don't want to do anything with the value.
  *
  * @param value The value to return.
+ * @category Functions
  */
 export function identityFunction<T>(value: T): T {
     return value;
 }
 
+export function curry<T extends (...args: any[]) => any>(fn: T): Curry<[...Parameters<T>, ReturnType<T>]> {
+    const { length } = fn;
+    return function curried(...args: any[]): any {
+        if (args.length >= length) {
+            return fn(...args);
+        } else {
+            return (...moreArgs: any[]) => curried(...args, ...moreArgs);
+        }
+    } as Curry<[...Parameters<T>, ReturnType<T>]>;
+}

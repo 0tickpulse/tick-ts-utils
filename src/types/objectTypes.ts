@@ -18,5 +18,7 @@
  * doSomething("a"); // OK
  * doSomething(MY_VALUES.A); // OK
  * ```
+ *
+ * @category Types
  */
 export type ObjectValues<T> = T[keyof T];
