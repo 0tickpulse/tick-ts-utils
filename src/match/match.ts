@@ -50,16 +50,16 @@ export class NoMatchError extends Error {
  * Looking at the two different approaches, it is clear that the {@link Match} object is more concise than a `switch` statement.
  *
  * Keep in mind that the order in which you add patterns matters. The first pattern that matches the value will be used.
- * There are several utility methods you can use to add patterns, such as {@link Match#withEquals} and {@link Match#withInList}.
+ * There are several utility methods you can use to add patterns, such as {@link Match#addEquals} and {@link Match#addItemInList}.
  * More information about these methods can be found in their documentation.
  *
  * ## Extracting the result
  *
- * There are several ways to extract the result from the {@link Match} object, the most common being the {@link Match#otherwise} method.
+ * There are several ways to extract the result from the {@link Match} object, the most common being the {@link Match#getOrElse} method.
  *
- * ### {@link Match#otherwise}
+ * ### {@link Match#getOrElse}
  *
- * The {@link Match#otherwise} method is used to specify a default value to return if no pattern matches.
+ * The {@link Match#getOrElse} method is used to specify a default value to return if no pattern matches.
  * When called, it returns the result of the first pattern that matches the value.
  * If no pattern matches, it returns the default value.
  *
@@ -89,31 +89,31 @@ export class Match<T, R> {
      * @param result  The result to return if the pattern matches.
      * @returns The object itself for method chaining.
      */
-    withFunc(pattern: (value: T) => boolean, result: R): this {
+    addFunc(pattern: (value: T) => boolean, result: R): this {
         this.#patterns.push([pattern, result]);
         return this;
     }
     /**
      * Adds a pattern to the {@link Match} object based on a value.
-     * This is a shortcut for {@link Match#withFunc} with `(value) => value === X` (where `X` is the value to match against).
+     * This is a shortcut for {@link Match#addFunc} with `(value) => value === X` (where `X` is the value to match against).
      *
      * @param value  The value to match against.
      * @param result The result to return if the pattern matches.
      * @returns The object itself for method chaining.
      */
-    withEquals(value: T, result: R): this {
-        return this.withFunc(equalsFunction<T>(value), result);
+    addEquals(value: T, result: R): this {
+        return this.addFunc(equalsFunction<T>(value), result);
     }
     /**
      * Adds a pattern to the {@link Match} object based on a value array. It will match if `array.includes(value)`.
-     * This is a shortcut for {@link Match#withFunc} with `(value) => values.includes(value)`.
+     * This is a shortcut for {@link Match#addFunc} with `(value) => values.includes(value)`.
      *
      * @param values The value array to match against.
      * @param result The result to return if the pattern matches.
      * @returns The object itself for method chaining.
      */
-    withInList(values: T[], result: R): this {
-        return this.withFunc((v) => values.includes(v), result);
+    addItemInList(values: T[], result: R): this {
+        return this.addFunc((v) => values.includes(v), result);
     }
     /**
      * Extracts the first matching result from the {@link Match} object. If no pattern matches, it returns the default value.
@@ -121,7 +121,7 @@ export class Match<T, R> {
      * @param result The result to return if no pattern matches.
      * @returns The first matching result, or the default value if no pattern matches.
      */
-    otherwise(result: R): R {
+    getOrElse(result: R): R {
         return this.matches()?.[1] ?? result;
     }
     /**
@@ -145,13 +145,13 @@ export class Match<T, R> {
      * Gets the first matching result from the {@link Match} object as a {@link result!Result} object. If no pattern matches, it returns a result containing a {@link NoMatchError}.
      * @returns The first matching result, or throws a {@link NoMatchError} if no pattern matches.
      */
-    get(): Result<R, NoMatchError> {
+    getAsResult(): Result<R, NoMatchError> {
         if (this.matches()) {
-            return Result.ok(this.otherwise(undefined as R));
+            return Result.ok(this.getOrElse(undefined as R));
         }
         return Result.error(new NoMatchError("No pattern matched the value"));
     }
     getAsOptional(): Optional<R> {
-        return Optional.of(this.otherwise(undefined as R));
+        return Optional.of(this.getOrElse(undefined as R));
     }
 }

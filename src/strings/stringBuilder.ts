@@ -1,11 +1,12 @@
+import { Cloneable } from "../index.js";
 import { stringify } from "./toString.js";
 
 /**
  * A mutable string builder.
- * 
+ *
  * String builders are useful for producing large strings.
  */
-export class StringBuilder {
+export class StringBuilder implements Cloneable<StringBuilder> {
     #chars: string[] = [];
     constructor(...parts: string[]) {
         this.append(...parts.map((s) => s.split("")));
@@ -33,6 +34,9 @@ export class StringBuilder {
     }
     isEmpty(): boolean {
         return this.length === 0;
+    }
+    deepClone(): StringBuilder {
+        return new StringBuilder(this.toString());
     }
     get length(): number {
         return this.#chars.length;

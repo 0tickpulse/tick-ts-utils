@@ -1,5 +1,6 @@
 export * from "./deepClone/exports.js";
 export * from "./deepEquals/exports.js";
+export * from "./duration/exports.js";
 export * from "./fetchWithZod/exports.js";
 export * from "./functions/exports.js";
 export * from "./match/exports.js";
