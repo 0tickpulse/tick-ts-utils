@@ -3,7 +3,7 @@ import { Result } from "../resultsAndOptionals/results.js";
 
 /**
  * An implementation of a type-safe fetch making use of the Zod library for validation.
- * This function will return a {@link result!Result} object, which can be used to check if the request was successful and that the validation was successful.
+ * This function will return a {@link Result} object, which can be used to check if the request was successful and that the validation was successful.
  *
  * @example
  * ```ts
@@ -24,7 +24,7 @@ import { Result } from "../resultsAndOptionals/results.js";
  *
  * @param url    The URL to fetch.
  * @param schema The schema to validate the response against.
- * @returns A {@link result!Result} object containing the parsed data if the request was successful and the validation was successful, or the {@link ZodError} if either of those failed.
+ * @returns A {@link Result} object containing the parsed data if the request was successful and the validation was successful, or the ZodError if either of those failed.
  */
 export async function fetchWithZod<T>(url: string, schema: z.ZodSchema<T>): Promise<Result<T, z.ZodError>> {
     return fetch(url)

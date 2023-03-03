@@ -142,7 +142,7 @@ export class Match<T, R> {
         return this.#patterns.find(([pattern]) => pattern(this.value));
     }
     /**
-     * Gets the first matching result from the {@link Match} object as a {@link result!Result} object. If no pattern matches, it returns a result containing a {@link NoMatchError}.
+     * Gets the first matching result from the {@link Match} object as a {@link Result} object. If no pattern matches, it returns a result containing a {@link NoMatchError}.
      * @returns The first matching result, or throws a {@link NoMatchError} if no pattern matches.
      */
     getAsResult(): Result<R, NoMatchError> {

@@ -1,7 +1,9 @@
+import { Match } from "../match/match.js";
+
 /**
  * This function returns a function that compares the given value against the expected value.
  * For example, `equalsFunction(5)(5)` will return `true` and `equalsFunction(5)(6)` will return `false`.
- * This is the backend for {@link match!Match#withEquals}.
+ * This is the backend for {@link Match#addEquals}.
  *
  * @param expected The expected value to compare against.
  */
