@@ -5,7 +5,7 @@ A large repository of utility things for JavaScript and TypeScript that are made
 ## 📦 Installation
 
 ```bash
-npm install @tick/utils
-pnpm install @tick/utils
-yarn add @tick/utils
+npm install tick-ts-utils
+pnpm install tick-ts-utils
+yarn add tick-ts-utils
 ```
