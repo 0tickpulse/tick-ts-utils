@@ -56,6 +56,7 @@ export class Logger {
         if (!dirExists) {
             await mkdir(dir, { recursive: true });
         }
+        await this.#replaceFile();
     }
 
     /**

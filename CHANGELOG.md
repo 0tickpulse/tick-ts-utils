@@ -1,5 +1,9 @@
 # Changelogs
 
+## 3.1.2
+
+- Minor fixes to logger.
+
 ## 3.1.1
 
 - `Logger#setOutputStream`, `Logger#log`, and `Logger#logError` now return `this` for method chaining
