@@ -1,7 +1,7 @@
 {
     "type": "module",
     "name": "tick-ts-utils",
-    "version": "3.0.3",
+    "version": "3.4.0",
     "description": "Bunch of utilities I personally use for TypeScript.",
     "main": "out/index.js",
     "scripts": {
@@ -34,6 +34,8 @@
         "zod": "^3.20.6"
     },
     "dependencies": {
+        "emphasize": "^6.0.0",
+        "stacktrace-js": "^2.0.2",
         "utils": "^0.3.1"
     }
 }
