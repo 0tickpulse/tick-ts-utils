@@ -1,5 +1,11 @@
 # Changelogs
 
+## 3.1.4
+
+(Wow pi version)
+
+- `Optional` now has a toString method (improves logging and stuff).
+
 ## 3.1.3
 
 - Improved IntelliSense for duration units.

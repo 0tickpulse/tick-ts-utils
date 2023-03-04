@@ -117,6 +117,9 @@ export class Optional<T> {
         }
         return this.#value;
     }
+    toString() {
+        return this.isPresent() ? `Optional of ${this.#value}` : "Empty Optional";
+    }
     /**
      * Returns an empty Optional.
      */
