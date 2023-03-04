@@ -1,5 +1,9 @@
 # Changelogs
 
+## 3.1.6
+
+- Fixed minor issue with `Logger#logError`.
+
 ## 3.1.5
 
 - Made `Optional#otherwise` more lenient with its type parameter. Previously, it would only accept a value with the same type as the Option's type itself. Now, it accepts any value.

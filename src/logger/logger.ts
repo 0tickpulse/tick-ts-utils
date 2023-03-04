@@ -153,7 +153,7 @@ export class Logger {
                 "\n" +
                 (await this.#getSourceLine(stacks[0])) +
                 "\n" +
-                stacks.map(this.#formatLine).join("\n"),
+                stacks.map(this.#formatLine.bind(this)).join("\n"),
         );
         return this;
     }
