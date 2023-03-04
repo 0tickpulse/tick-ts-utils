@@ -9,7 +9,7 @@ import { format } from "util";
 type LogLevel = "info" | "warn" | "error" | "debug";
 
 /**
- * An experimental logger that logs to an output stream as well as - optionally - a file.
+ * An experimental logger that logs to a given output stream as well as - optionally - a file.
  * Every log message has a timestamp and a log level.
  *
  * @category Logging
@@ -81,8 +81,15 @@ export class Logger {
         return this.#logPath;
     }
 
+    /**
+     * Sets the output stream of the logger to the given stream.
+     *
+     * @param stream The stream to write to.
+     * @returns The object itself for method chaining.
+     */
     setOutputStream(stream: NodeJS.WritableStream) {
         this.#outputStream = stream;
+        return this;
     }
 
     get outputStream() {
@@ -115,6 +122,7 @@ export class Logger {
      * @param level   The log level.
      * @param message The message to log.
      * @param args    The arguments to format the message with. See [util.format](https://nodejs.org/api/util.html#util_util_format_format_args).
+     * @returns The object itself for method chaining.
      */
     log<T>(level: LogLevel, message: T, ...args: unknown[]) {
         const date = new Date();
@@ -123,6 +131,7 @@ export class Logger {
         const formattedMessage = `${time} ${this.levels[level].prefix}${format(message, ...args)}${codes.reset}`;
         this.#outputStream.write(formattedMessage + "\n");
         this.#write(formattedMessage);
+        return this;
     }
 
     /**
@@ -132,8 +141,9 @@ export class Logger {
      *
      * @param message The message to log.
      * @param error   The error to log.
+     * @returns The object itself for method chaining.
      */
-    async #logError(message: string, error: Error) {
+    async logError(message: string, error: Error) {
         const stacks = await StackTrace.fromError(error);
         this.log(
             "error",
@@ -144,6 +154,7 @@ export class Logger {
                 "\n" +
                 stacks.map(this.#formatLine).join("\n"),
         );
+        return this;
     }
 
     #formatDate(date: Date) {

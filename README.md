@@ -20,10 +20,10 @@ import { emptyFunction } from "tick-ts-utils";
 await someAsyncFunction().catch(emptyFunction);
 ```
 
-You can also import `tick-ts-utils/namespaced` to import all functions under a namespace.
+You can also import `tick-ts-utils/out/namespaced.js` to import all functions under a namespace.
 
 ```ts
-import { functions } from "tick-ts-utils/namespaced";
+import { functions } from "tick-ts-utils/out/namespaced.js";
 
 await someAsyncFunction().catch(functions.emptyFunction);
 ```

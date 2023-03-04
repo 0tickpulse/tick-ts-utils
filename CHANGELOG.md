@@ -1,5 +1,10 @@
 # Changelogs
 
+## 3.1.1
+
+- `Logger#setOutputStream`, `Logger#log`, and `Logger#logError` now return `this` for method chaining
+- Added `Logger#logError`
+
 ## 3.1.0
 
 - Adds a logger
