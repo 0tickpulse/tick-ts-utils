@@ -1,7 +1,7 @@
 /**
  * A map of duration units to their millisecond equivalents.
  */
-const DURATION_MAP: Record<string, number> = {
+const DURATION_MAP = {
     milliseconds: 1,
     seconds: 1000,
     minutes: 60 * 1000,
@@ -10,7 +10,7 @@ const DURATION_MAP: Record<string, number> = {
     weeks: 7 * 24 * 60 * 60 * 1000,
     months: 30 * 24 * 60 * 60 * 1000,
     years: 365 * 24 * 60 * 60 * 1000,
-};
+} as const satisfies Record<string, number>;
 
 /**
  * Immutable class representing a duration of time.

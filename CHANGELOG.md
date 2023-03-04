@@ -1,5 +1,9 @@
 # Changelogs
 
+## 3.1.3
+
+- Improved IntelliSense for duration units.
+
 ## 3.1.2
 
 - Minor fixes to logger.
