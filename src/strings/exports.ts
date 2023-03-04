@@ -1,3 +1,3 @@
 export * from "./stringBuilder.js";
-export * from "./toString.js";
+export * from "./stringify.js";
 export * from "./taggedTemplateLiterals.js";

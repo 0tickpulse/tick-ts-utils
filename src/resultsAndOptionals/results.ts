@@ -1,3 +1,5 @@
+import { Optional } from "./optionals.js";
+
 /**
  * An error that occurs when getting a {@link Result} object that contains an error.
  *
@@ -109,5 +111,8 @@ export class Result<T, E> {
             throw func();
         }
         return this.error;
+    }
+    getAsOptional(): Optional<T> {
+        return Optional.of(this.value);
     }
 }

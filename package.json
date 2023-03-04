@@ -1,7 +1,7 @@
 {
     "type": "module",
     "name": "tick-ts-utils",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "description": "Bunch of utilities I personally use for TypeScript.",
     "main": "out/index.js",
     "scripts": {

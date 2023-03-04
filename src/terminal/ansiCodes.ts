@@ -131,6 +131,9 @@ export const codes = {
     /** Only implemented in minty. */
     superscriptSubscriptReset: fromSGR(75),
 };
+
+type Basic = Record<"fore" | "back" | "under", string>;
+
 /**
  * Converts a RGB color to a map of foreground, background, and underline console color codes.
  *
@@ -139,7 +142,7 @@ export const codes = {
  * @param blue  The blue value of the color.
  * @category Terminal
  */
-export const generateBasic = (red: number, green: number, blue: number): { fore: string; back: string; under: string; } => {
+export const generateBasic = (red: number, green: number, blue: number): Basic => {
     return { fore: foregroundColor(red, green, blue), back: backgroundColor(red, green, blue), under: underlineColor(red, green, blue) };
 };
 export const basic = {
@@ -156,4 +159,4 @@ export const basic = {
     brown: generateBasic(165, 42, 42),
     pink: generateBasic(255, 192, 203),
     gray: generateBasic(128, 128, 128),
-} satisfies { [key: string]: { fore: string; back: string; under: string } };
+} satisfies Record<string, Basic>;

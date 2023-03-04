@@ -1,10 +1,10 @@
 import { Cloneable } from "../index.js";
-import { stringify } from "./toString.js";
+import { stringify } from "./stringify.js";
 
 /**
  * A mutable string builder.
  *
- * String builders are useful for producing large strings.
+ * String builders are useful for producing large strings bit-by-bit.
  *
  * @category Strings
  */
