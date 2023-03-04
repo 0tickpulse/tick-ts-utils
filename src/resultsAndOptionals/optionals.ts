@@ -100,7 +100,7 @@ export class Optional<T> {
      *
      * @param value The fallback value.
      */
-    otherwise(value: T): T {
+    otherwise<U>(value: U): T | U {
         if (this.#value === undefined) {
             return value;
         }
@@ -111,7 +111,7 @@ export class Optional<T> {
      *
      * @param func The function to get the fallback value from.
      */
-    otherwiseGet(func: () => T): T {
+    otherwiseGet<U>(func: () => U): T | U {
         if (this.#value === undefined) {
             return func();
         }
