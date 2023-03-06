@@ -1,5 +1,9 @@
 # Changelogs
 
+## 3.1.7
+
+- Cleans up the compiled folder a bit.
+
 ## 3.1.6
 
 - Fixed minor issue with `Logger#logError`.
