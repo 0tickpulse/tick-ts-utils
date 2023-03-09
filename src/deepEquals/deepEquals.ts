@@ -20,15 +20,16 @@
  *
  * 1. If the **first value** has an `equals` method that has an arity of 1 (in other words, it has one argument), that method will be called and its result will be returned.
  * 1. If the **second value** has an `equals` method that has an arity of 1 (in other words, it has one argument), that method will be called and its result will be returned.
- * 1. If the values are strictly equal (`===`), `true` will be returned.
- * 1. If either value is `undefined`, `false` will be returned.
- * 1. If either value is `null`, `true` will be returned.
- * 1. If the types of the values are not equal (using `typeof`), `false` will be returned.
- * 1. If the values are both arrays, all of the elements will be compared recursively.
- * 1. If the values are both objects, the keys of the objects will be compared.
- * 1. Finally, returns `false`.
+ * 1. If the values are equal checking by (`Object.is`), `true` will be returned.
+ * 1. If either value is `null`, `undefined`, or not an object, `false` will be returned.
+ * 1. If the values have different numbers of keys, `false` will be returned.
+ * 1. If the values have the same keys, the values of those keys will be compared recursively.
+ * 1. If all the values of the keys are equal, `true` will be returned.
+ * 1. If any of the values of the keys are not equal, `false` will be returned.
  *
- * If you want to implement your own `equals` method, you can increase type safety by using the {@link DeepEquals} type. For example:
+ * If you want to add your own custom deep equality logic, you can increase type safety by implementing the `DeepEquals` interface.
+ * This interface has a single method, `equals`, which returns whether the value is equal to another value.
+ * For example:
  *
  * ```ts
  * class MyClass implements DeepEquals {
@@ -42,6 +43,8 @@
  * }
  * ```
  *
+ * This can allow developers to include more efficient and accurate deep equality checks for their own classes.
+ *
  * @param value1 The first value to compare.
  * @param value2 The second value to compare.
  * @returns `true` if the values are deeply equal, `false` otherwise.
@@ -54,43 +57,42 @@ export function deepEquals(value1: unknown, value2: unknown): boolean {
     if (hasEqualFunction(value2)) {
         return value2.equals(value1);
     }
-    if (value1 === value2) {
+
+    if (Object.is(value1, value2)) {
         return true;
     }
-    if (value1 === undefined || value2 === undefined) {
+
+    if (value1 === null || value2 === null || value1 === undefined || value2 === undefined) {
         return false;
     }
-    if (value1 === null || value2 === null) {
+
+    if (typeof value1 !== "object" || typeof value2 !== "object") {
         return false;
     }
-    if (typeof value1 !== typeof value2) {
+
+    const keys1 = Reflect.ownKeys(value1);
+    const keys2 = Reflect.ownKeys(value2);
+
+    if (keys1.length !== keys2.length) {
         return false;
     }
-    if (Array.isArray(value1) && Array.isArray(value2)) {
-        if (value1.length !== value2.length) {
+
+    return keys1.every((key) => {
+        if (!keys2.includes(key)) {
             return false;
         }
-        for (let i = 0; i < value1.length; i++) {
-            if (!deepEquals(value1[i], value2[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
-    if (typeof value1 === "object") {
-        const aKeys = Object.keys(value1);
-        const bKeys = Object.keys(value2);
-        if (aKeys.length !== bKeys.length) {
+
+        // special case for functions
+        if (
+            typeof (value1 as Record<PropertyKey, unknown>)[key] === "function" &&
+            typeof (value2 as Record<PropertyKey, unknown>)[key] === "function" &&
+            (value1 as Record<PropertyKey, unknown>)[key]?.toString() !== (value2 as Record<PropertyKey, unknown>)[key]?.toString()
+        ) {
             return false;
         }
-        for (const key of aKeys) {
-            if (!deepEquals((value1 as Record<PropertyKey, unknown>)[key], (value2 as Record<PropertyKey, unknown>)[key])) {
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
+
+        return deepEquals((value1 as Record<PropertyKey, unknown>)[key], (value2 as Record<PropertyKey, unknown>)[key]);
+    });
 }
 
 function hasEqualFunction<T>(value: T): value is T & { equals: (other: unknown) => boolean } {

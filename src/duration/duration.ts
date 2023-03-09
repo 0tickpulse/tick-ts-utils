@@ -54,6 +54,10 @@ const DURATION_MAP = {
  * @category Duration
  */
 export class Duration {
+    /**
+     * A duration that represents no time.
+     */
+    static readonly INSTANT = new Duration(0);
     constructor(public readonly milliseconds: number) {}
     /**
      * Constructs a new Duration from a unit and an amount.
@@ -110,7 +114,7 @@ export class Duration {
             if (value === 0) {
                 continue;
             }
-            result.push(`${value}${words ? ` ${unit}` : unit[0]}${(words && value !== 1) ? "s" : ""}`);
+            result.push(`${value}${words ? ` ${unit}` : unit[0]}${words && value !== 1 ? "s" : ""}`);
         }
         if (words) {
             if (result.length === 1) {

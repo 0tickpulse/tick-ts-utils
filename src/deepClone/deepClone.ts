@@ -32,15 +32,10 @@ import { isTypedArray } from "util/types";
  * Internally, this function has a few cases:
  *
  * 1. If the value has a `deepClone` method that has an arity of 0 (in other words, it has zero arguments), that method will be called and its result will be returned.
- * 1. If the value is an array, a typed array, or an arraybuffer, a new array will be created with the same elements, but each element will be recursively deep cloned.
- * 1. If the value is an object, a new object will be created with the same keys and values, but each value will be recursively deep cloned.
- * 1. If the value is a boxed primitive, a new boxed primitive will be created with the same value.
- * 1. If the value is a `DataView`, a new DataView will be created with the same buffer, byte offset, and byte length.
- * 1. If the value is a `Date`, a new Date will be created with the same value.
- * 1. If the value is a `RegExp`, a new RegExp will be created with the same value.
- * 1. If the value is a `Map`, a new Map will be created with the same keys and values, but each key and value will be recursively deep cloned.
- * 1. If the value is a `Set`, a new Set will be created with the same values, but each value will be recursively deep cloned.
- * 1. Otherwise, the value will be returned as-is.
+ * 1. If the value is a primitive, the value will be returned.
+ * 1. If the value is a `Date`, a new `Date` object will be created with the same value and returned.
+ * 1. If the value is a `RegExp`, a new `RegExp` object will be created with the same value and returned.
+ * 1. Creates a new object with the same prototype as the original object, and copies all the properties over, recursively cloning values.
  *
  * If you want to add your own custom deep cloning logic, you can increase type safety by implementing the `Cloneable` interface.
  * This interface has a single method, `deepClone`, which returns a deep clone of the value.
@@ -60,58 +55,48 @@ import { isTypedArray } from "util/types";
  * @category Cloning
  */
 export function deepClone<T>(value: T): T {
+    return internalDeepClone(value);
+}
+
+function internalDeepClone<T>(value: T, map = new WeakMap()): T {
     if (hasDeepCloneMethod(value)) {
         return value.deepClone();
     }
-    if (Array.isArray(value)) {
-        return [...value.map(deepClone)] as T;
+    if (!isObjectOrFunction(value)) {
+        return value;
     }
-    if (typeof value === "object") {
-        const result = {} as T;
-        for (const key in value) {
-            result[key] = deepClone(value[key]);
-        }
-        return result;
+
+    if (typeof value === "function") {
+        return value;
     }
-    if (value instanceof ArrayBuffer) {
-        return value.slice(0) as T;
-    }
-    if (value instanceof Boolean) {
-        return new Boolean(value.valueOf()) as T;
-    }
-    if (value instanceof DataView) {
-        return new DataView(value.buffer.slice(0), value.byteOffset, value.byteLength) as T;
-    }
+
     if (value instanceof Date) {
-        return new Date(value.getTime()) as T;
-    }
-    if (value instanceof Map) {
-        const result = new Map();
-        for (const [k, v] of value) {
-            result.set(deepClone(k), deepClone(v));
-        }
-        return result as T;
-    }
-    if (value instanceof Number) {
-        return new Number(value.valueOf()) as T;
+        return new Date(value) as T;
     }
     if (value instanceof RegExp) {
-        return new RegExp(value.source, value.flags) as T;
+        return new RegExp(value) as T;
     }
-    if (value instanceof Set) {
-        const result = new Set();
-        for (const v of value) {
-            result.add(deepClone(v));
-        }
-        return result as T;
+
+    const toClone = value as unknown as Record<PropertyKey, unknown>;
+    //      ^?
+
+    if (map.has(toClone)) {
+        return map.get(toClone);
     }
-    if (value instanceof String) {
-        return new String(value.valueOf()) as T;
-    }
-    if (isTypedArray(value)) {
-        return value.slice(0) as T;
-    }
-    return value;
+
+    const descriptors = Object.getOwnPropertyDescriptors(toClone);
+    const cloned = Object.create(Object.getPrototypeOf(toClone), descriptors);
+    map.set(toClone, cloned);
+    Reflect.ownKeys(toClone).forEach((key) => {
+        const val = toClone[key] as unknown;
+        cloned[key] = val instanceof Object ? internalDeepClone(val, map) : val;
+    });
+
+    return cloned;
+}
+
+function isObjectOrFunction(value: unknown): value is object | Function {
+    return typeof value === "object" || typeof value === "function";
 }
 
 function hasDeepCloneMethod<T>(value: T): value is T & { deepClone(): T } {
@@ -138,3 +123,4 @@ export interface Cloneable<T> {
      */
     deepClone(): T;
 }
+

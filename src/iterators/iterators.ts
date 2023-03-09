@@ -42,3 +42,13 @@ export function mapObject<T extends Record<PropertyKey, unknown>, U>(object: T, 
     }
     return result;
 }
+
+export function fromIterator<T>(iterator: Iterator<T>): T[] {
+    const result: T[] = [];
+    let next = iterator.next();
+    while (!next.done) {
+        result.push(next.value);
+        next = iterator.next();
+    }
+    return result;
+}
