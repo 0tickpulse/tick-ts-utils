@@ -1,5 +1,4 @@
 import { Cloneable } from "../index.js";
-import { stringify } from "./stringify.js";
 
 /**
  * A mutable string builder.
@@ -15,14 +14,17 @@ export class StringBuilder implements Cloneable<StringBuilder> {
     }
     append(...parts: unknown[]): this {
         for (const part of parts) {
-            const s = stringify(part);
+            const s = String(part);
             this.#chars.push(...s.split(""));
         }
         return this;
     }
+    appendLine(...parts: unknown[]): this {
+        return this.append(...parts, "\n");
+    }
     insert(index: number, ...parts: unknown[]): this {
         for (const part of parts) {
-            const s = stringify(part);
+            const s = String(part);
             this.#chars.splice(index, 0, s);
         }
         return this;
