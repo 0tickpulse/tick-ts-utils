@@ -12,11 +12,11 @@ test("deepClone with objects", () => {
     const b = deepClone(a);
     a.a = 3;
     expect(b).toEqual({ a: 1, b: 2 });
-})
+});
 
 test("deepClone with instances of classes that implement Cloneable", () => {
     const a = new A(1);
     const b = deepClone(a);
     a.a = 3;
     expect(b).toEqual(new A(1));
-})
+});

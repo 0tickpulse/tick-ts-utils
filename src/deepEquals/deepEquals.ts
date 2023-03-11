@@ -1,3 +1,5 @@
+import { hasFunctionWithArity } from "../internal.js";
+
 /**
  * This function compares two values for deep equality.
  *
@@ -23,9 +25,7 @@
  * 1. If the values are equal checking by (`Object.is`), `true` will be returned.
  * 1. If either value is `null`, `undefined`, or not an object, `false` will be returned.
  * 1. If the values have different numbers of keys, `false` will be returned.
- * 1. If the values have the same keys, the values of those keys will be compared recursively.
- * 1. If all the values of the keys are equal, `true` will be returned.
- * 1. If any of the values of the keys are not equal, `false` will be returned.
+ * 1. If the values have the same keys, the *descriptors* of those keys will be compared recursively.
  *
  * If you want to add your own custom deep equality logic, you can increase type safety by implementing the `DeepEquals` interface.
  * This interface has a single method, `equals`, which returns whether the value is equal to another value.
@@ -91,19 +91,25 @@ export function deepEquals(value1: unknown, value2: unknown): boolean {
             return false;
         }
 
-        return deepEquals((value1 as Record<PropertyKey, unknown>)[key], (value2 as Record<PropertyKey, unknown>)[key]);
+        const descriptor1 = Reflect.getOwnPropertyDescriptor(value1, key);
+        const descriptor2 = Reflect.getOwnPropertyDescriptor(value2, key);
+
+        if (descriptor1 === undefined || descriptor2 === undefined) {
+            return (value1 as Record<PropertyKey, unknown>)[key] === (value2 as Record<PropertyKey, unknown>)[key];
+        }
+
+        return (
+            deepEquals(descriptor1.configurable, descriptor2.configurable) &&
+            deepEquals(descriptor1.enumerable, descriptor2.enumerable) &&
+            deepEquals(descriptor1.writable, descriptor2.writable) &&
+            deepEquals(descriptor1.value, descriptor2.value) &&
+            deepEquals(descriptor1.get, descriptor2.get)
+        );
     });
 }
 
 function hasEqualFunction<T>(value: T): value is T & { equals: (other: unknown) => boolean } {
-    return (
-        value !== null &&
-        value !== undefined &&
-        typeof value === "object" &&
-        "equals" in value &&
-        typeof (value as unknown as { equals: unknown }).equals === "function" &&
-        (value as unknown as { equals: (other: unknown) => boolean }).equals.length === 1
-    );
+    return hasFunctionWithArity(value, "equals", 1);
 }
 
 /**

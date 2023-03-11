@@ -1,4 +1,5 @@
 export * as namespaced from "./namespaced.js";
+export * from "./comparisons/exports.js";
 export * from "./deepClone/exports.js";
 export * from "./deepEquals/exports.js";
 export * from "./duration/exports.js";

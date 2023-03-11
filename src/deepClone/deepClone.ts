@@ -1,4 +1,5 @@
 import { isTypedArray } from "util/types";
+import { hasFunctionWithArity } from "../internal.js";
 
 /**
  * # Deep Cloning
@@ -100,14 +101,7 @@ function isObjectOrFunction(value: unknown): value is object | Function {
 }
 
 function hasDeepCloneMethod<T>(value: T): value is T & { deepClone(): T } {
-    return (
-        value !== null &&
-        value !== undefined &&
-        typeof value === "object" &&
-        "deepClone" in value &&
-        typeof (value as { deepClone: () => T }).deepClone === "function" &&
-        (value as { deepClone: () => T }).deepClone.length === 0
-    );
+    return hasFunctionWithArity(value, "deepClone", 0);
 }
 
 /**

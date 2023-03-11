@@ -15,6 +15,7 @@ export class NoValueInOptionalError extends Error {
  * @category Typeguarding
  */
 export class Optional<T> {
+    static #EMPTY = new Optional(undefined);;
     readonly #value: T | undefined;
     /**
      * Creates a new Optional with a value.
@@ -124,7 +125,7 @@ export class Optional<T> {
      * Returns an empty Optional.
      */
     static empty<T>(): Optional<T> {
-        return new Optional<T>(undefined);
+        return Optional.#EMPTY as Optional<T>;
     }
     /**
      * Returns an optional of a given value, or an empty optional if the value is null or undefined.

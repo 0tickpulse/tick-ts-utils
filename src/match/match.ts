@@ -128,7 +128,7 @@ export class Match<T, R> {
      * @returns The first matching result, or the default value if no pattern matches.
      */
     getOrElse(result: R): R {
-        return this.matches()?.[1] ?? result;
+        return this.getFirstMatch()?.[1] ?? result;
     }
     /**
      * Iterates over all patterns and finds a matching result.
@@ -144,7 +144,7 @@ export class Match<T, R> {
      *
      * @returns The first matching result as a two-sized array where the first element is the function for the matcher, and the second is the result, or `undefined` if no pattern matches.
      */
-    matches(): Pattern<T, R> | undefined {
+    getFirstMatch(): Pattern<T, R> | undefined {
         return this.#patterns.find(([pattern]) => pattern(this.value));
     }
     /**
@@ -152,12 +152,18 @@ export class Match<T, R> {
      * @returns The first matching result, or throws a {@link NoMatchError} if no pattern matches.
      */
     getAsResult(): Result<R, NoMatchError> {
-        if (this.matches()) {
+        if (this.getFirstMatch()) {
             return Result.ok(this.getOrElse(undefined as R));
         }
         return Result.error(new NoMatchError("No pattern matched the value"));
     }
     getAsOptional(): Optional<R> {
         return Optional.of(this.getOrElse(undefined as R));
+    }
+    /**
+     * Gets all matching results from the {@link Match} object as an array.
+     */
+    getAllMatches(): R[] {
+        return this.#patterns.filter(([pattern]) => pattern(this.value)).map(([, result]) => result);
     }
 }

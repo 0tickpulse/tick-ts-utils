@@ -1,3 +1,4 @@
+export * as comparisons from "./comparisons/exports.js";
 export * as deepClone from "./deepClone/exports.js";
 export * as deepEquals from "./deepEquals/exports.js";
 export * as duration from "./duration/exports.js";

@@ -1,3 +1,5 @@
+import { Comparable, DeepEquals } from "../index.js";
+
 /**
  * A map of duration units to their millisecond equivalents.
  */
@@ -53,7 +55,7 @@ const DURATION_MAP = {
  *
  * @category Duration
  */
-export class Duration {
+export class Duration implements DeepEquals, Comparable<Duration> {
     /**
      * A duration that represents no time.
      */
@@ -167,7 +169,7 @@ export class Duration {
     }
 
     /**
-     * Compares this duration to another duration unit.
+     * Compares this duration to another duration in a specific unit. Shortcut for `this.compareTo(Duration.fromUnit(unit, amount))`.
      *
      * @param unit The unit to compare to.
      * @param amount The amount of the unit to compare to.

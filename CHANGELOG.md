@@ -1,5 +1,18 @@
 # Changelogs
 
+## 3.2
+
+- `deepEquals` now properly checks for `equal` methods on objects.
+- `deepEquals` now matches property descriptors.
+- New comparison functions and `Comparable` interface.
+- `Duration` now implements `Comparable` and `DeepEquals`.
+- `Duration#compareUnit` documentation changed.
+- `Match` now has a `getAllMatches` method to get all matches instead of just the first one.
+- New internal `hasFunctionWithArity` function, cleans up some code.
+- `Result` now has documentation.
+- `Result#getOrElse`, `Result#getErrorOrElse`, `Result#getOrElseGet`, and `Result#getErrorOrElseGet` now allow you to pass functions that return any value.
+- `Optional.empty` now returns a singleton instance of `Optional` instead of a new instance every time.
+
 ## 3.1.7
 
 - Cleans up the compiled folder a bit.
