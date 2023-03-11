@@ -34,6 +34,16 @@ export function identityFunction<T>(value: T): T {
     return value;
 }
 
+/**
+ * Returns a function that returns the given value. Similar to {@link identityFunction}, but this function returns a function instead of the value itself.
+ *
+ * @param value The value to return.
+ * @category Functions
+ */
+export function constantFunction<T>(value: T): () => T {
+    return () => value;
+}
+
 export function curry<T extends (...args: any[]) => any>(fn: T): Curry<[...Parameters<T>, ReturnType<T>]> {
     const { length } = fn;
     return function curried(...args: any[]): any {

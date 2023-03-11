@@ -15,6 +15,26 @@ export class GetErrorResult extends Error {}
 export class Result<T, E> {
     constructor(public value: T | undefined, readonly error: E | undefined) {}
     /**
+     * Runs a function and returns the function's return value as a Result.
+     * If the function throws an error, the error will be returned instead.
+     *
+     * @example
+     * ```ts
+     * const result = Result.try(() => {
+     *     throw new Error("Something went wrong");
+     * }); // same as Result.error(new Error("Something went wrong"))
+     *
+     * const other = Result.try(() => 5); // same as Result.ok(5)
+     * ```
+     */
+    static try<T, E>(func: () => T): Result<T, E> {
+        try {
+            return Result.ok(func());
+        } catch (error) {
+            return Result.error(error) as Result<T, E>;
+        }
+    }
+    /**
      * Creates a new Result object that contains a success value.
      *
      * @param value The success value.
