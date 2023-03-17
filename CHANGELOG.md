@@ -1,5 +1,9 @@
 # Changelogs
 
+## 3.3.2
+
+- Now uses CommonJS by default, but still supports ES modules.
+
 ## 3.3.1
 
 - Experimental CommonJS support fix 1
