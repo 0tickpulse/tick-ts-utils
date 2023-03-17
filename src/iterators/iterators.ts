@@ -1,4 +1,5 @@
 import { StringBuilder } from "../index.js";
+import { deepClone } from "../deepClone/deepClone.js";
 
 /**
  * Creates an array of numbers (positive and/or negative) progressing from `start` up to, but not including, `end`.
@@ -48,6 +49,12 @@ export function mapObject<T extends Record<PropertyKey, unknown>, U>(
     return result;
 }
 
+/**
+ * Creates an array from an iterator.
+ *
+ * @param iterator The iterator to convert.
+ * @category Iterators
+ */
 export function fromIterator<T>(iterator: Iterator<T>): T[] {
     const result: T[] = [];
     let next = iterator.next();
@@ -111,4 +118,36 @@ export function chunkArray<T>(array: T[], size: number): T[][] {
  */
 export function asArray<T>(value: T | T[]): T[] {
     return Array.isArray(value) ? value : [value];
+}
+
+/**
+ * Creates an array of the specified length filled with the specified value.
+ *
+ * @param value The value to fill the array with.
+ * @param count The number of times to fill the array.
+ * @param clone Whether to clone the value using this library's `deepClone` function.
+ * @category Iterators
+ */
+export function fill<T>(value: T, count: number, clone = false) {
+    const result: T[] = [];
+    for (let i = 0; i < count; i++) {
+        result.push(clone ? deepClone(value) : value);
+    }
+    return result;
+}
+
+/**
+ * Creates an array of the specified length filled with the return value of the specified iteratee.
+ *
+ * @param iteratee The iteratee to call.
+ * @param count The number of times to call the iteratee.
+ * @param clone Whether to clone the return value of the iteratee using this library's `deepClone` function.
+ * @category Iterators
+ */
+export function fillWith<T>(iteratee: (index: number) => T, count: number, clone = false) {
+    const result: T[] = [];
+    for (let i = 0; i < count; i++) {
+        result.push(clone ? deepClone(iteratee(i)) : iteratee(i));
+    }
+    return result;
 }

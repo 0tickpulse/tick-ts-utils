@@ -1,16 +1,23 @@
 {
     "type": "module",
     "name": "tick-ts-utils",
-    "version": "3.2.0",
+    "version": "3.3.0",
     "description": "Bunch of utilities I personally use for TypeScript.",
     "main": "out/index.js",
+    "exports": {
+        ".": {
+            "import": "./out/index.js",
+            "require": "./out/cjs.cjs"
+        },
+        "./package.json": "./package.json"
+    },
     "scripts": {
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPattern=src/",
         "build": "tsc -b",
         "watch": "tsc -b -w",
         "clean": "rm -rf out",
         "cleanWindows": "rmdir /s /q out",
-        "typedoc": "pnpm exec typedoc --out docs ./src",
+        "typedoc": "pnpm exec typedoc --out docs ./src --plugin @mxssfd/typedoc-theme --theme my-theme",
         "prettier": "pnpm exec prettier -w ./src"
     },
     "author": "0TickPulse",
@@ -23,6 +30,7 @@
         "prettier": "^2.8.4",
         "ts-jest": "^29.0.5",
         "typedoc": "^0.23.26",
+        "typedoc-plugin-markdown": "^3.14.0",
         "typescript": "^4.9.5"
     },
     "prettier": {
@@ -34,6 +42,7 @@
         "zod": "^3.21.0"
     },
     "dependencies": {
+        "@mxssfd/typedoc-theme": "^1.0.3",
         "emphasize": "^6.0.0",
         "stacktrace-js": "^2.0.2",
         "utils": "^0.3.1"

@@ -1,4 +1,4 @@
-import { chunkArray, formatArray, range } from "./iterators.js";
+import { chunkArray, fill, formatArray, range } from "./iterators.js";
 
 test("range single arity test", () => {
     expect(range(5)).toEqual([0, 1, 2, 3, 4]);
@@ -20,10 +20,18 @@ test("array formatting test", () => {
 
 test("array chunk test", () => {
     const a = range(10);
-    expect(chunkArray(a, 3)).toEqual([
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [9],
-    ]);
-})
+    expect(chunkArray(a, 3)).toEqual([[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]);
+});
+
+test("fill test", () => {
+    const obj = { a: 1 };
+    const arr = fill(obj, 3);
+    expect(arr).toEqual([obj, obj, obj]);
+});
+
+test("fill test with clone", () => {
+    const obj2 = { a: 2 };
+    const arr2 = fill(obj2, 3, true);
+    arr2[0].a = 3;
+    expect(arr2).toEqual([{ a: 3 }, { a: 2 }, { a: 2 }]);
+});

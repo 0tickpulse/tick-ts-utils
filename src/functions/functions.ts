@@ -1,4 +1,5 @@
-import { Curry } from "../index.js";
+import { Optional } from "../resultsAndOptionals/optionals.js";
+import { Curry } from "../types/functionTypes.js";
 import { Match } from "../match/match.js";
 
 /**
@@ -42,6 +43,26 @@ export function identityFunction<T>(value: T): T {
  */
 export function constantFunction<T>(value: T): () => T {
     return () => value;
+}
+
+/**
+ * Returns a function that returns the `index`th argument that was passed in. Works with negative indices, where `-1` is the last argument, `-2` is the second-to-last argument, and so on.
+ *
+ * @example
+ * ```ts
+ * const first = argFunction(0);
+ * const second = argFunction(1);
+ * first(1, 2, 3).get(); // 1
+ * second(1, 2, 3).get(); // 2
+ * ```
+ *
+ * @param index The index of the argument to return.
+ * @category Functions
+ */
+export function argFunction(index: number): <T>(...args: T[]) => Optional<T> {
+    return <T>(...args: T[]) => {
+        return Optional.of(args.at(index));
+    };
 }
 
 export function curry<T extends (...args: any[]) => any>(fn: T): Curry<[...Parameters<T>, ReturnType<T>]> {

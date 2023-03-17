@@ -1,5 +1,9 @@
 # Changelogs
 
+## 3.3
+
+- Experimental CommonJS support
+
 ## 3.2
 
 - `deepEquals` now properly checks for `equal` methods on objects.
