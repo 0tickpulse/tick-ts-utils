@@ -1,5 +1,9 @@
 # Changelogs
 
+## 3.3.3
+
+- Removed `"type": "module"` from `package.json` to fix CommonJS support.
+
 ## 3.3.2
 
 - Now uses CommonJS by default, but still supports ES modules.
