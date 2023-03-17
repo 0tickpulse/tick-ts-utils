@@ -1,15 +1,8 @@
 {
     "name": "tick-ts-utils",
-    "version": "3.3.3",
+    "version": "4.0.0",
     "description": "Bunch of utilities I personally use for TypeScript.",
     "main": "out/index.js",
-    "exports": {
-        ".": {
-            "import": "./out/index.js",
-            "require": "./out/cjs.cjs"
-        },
-        "./package.json": "./package.json"
-    },
     "scripts": {
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPattern=src/",
         "build": "tsc -b",

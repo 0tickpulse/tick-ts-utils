@@ -1,5 +1,9 @@
 # Changelogs
 
+## 4.0.0
+
+- Removed the logger. It was too buggy and doesn't fit in with the rest of the library.
+
 ## 3.3.3
 
 - Removed `"type": "module"` from `package.json` to fix CommonJS support.
