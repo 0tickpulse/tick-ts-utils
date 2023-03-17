@@ -1,5 +1,9 @@
 # Changelogs
 
+## 3.3.1
+
+- Experimental CommonJS support fix 1
+
 ## 3.3
 
 - Experimental CommonJS support
