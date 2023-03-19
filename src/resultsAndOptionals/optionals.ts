@@ -15,7 +15,7 @@ export class NoValueInOptionalError extends Error {
  * @category Typeguarding
  */
 export class Optional<T> {
-    static #EMPTY = new Optional(undefined);;
+    static #EMPTY = new Optional(undefined);
     readonly #value: T | undefined;
     /**
      * Creates a new Optional with a value.
@@ -87,6 +87,24 @@ export class Optional<T> {
     }
     /**
      * If the value is present, returns a new Optional with the value of the given function. If the value is not present, returns an empty Optional.
+     * This can make Optional similar to a monad.
+     *
+     * @example
+     * ```ts
+     * const optional = Optional.of(5);
+     * const mappedOptional = optional.map(value => value * 2);
+     * mappedOptional.get() // 10
+     *
+     * function getFromAPI(url: string): number | undefined {
+     *     // ...
+     *     return undefined;
+     * }
+     *
+     * const other = Optional.of("https://example.com");
+     * const mappedOther = other.map(value => getFromAPI(value)).map(value => value * 2);
+     * mappedOther.isPresent() // false
+     * // Notice how we do not have to perform any null checks.
+     * ```
      *
      * @param func The function to map the value to. The value will be passed as the first argument.
      */
