@@ -13,7 +13,12 @@ export class GetErrorResult extends Error {}
  * @category Typeguarding
  */
 export class Result<T, E> {
-    constructor(public value: T | undefined, readonly error: E | undefined) {}
+    #value: T | undefined;
+    #error: E | undefined;
+    constructor(value: T | undefined, error: E | undefined) {
+        this.#value = value;
+        this.#error = error;
+    }
     /**
      * Runs a function and returns the function's return value as a Result.
      * If the function throws an error, the error will be returned instead.
@@ -26,10 +31,36 @@ export class Result<T, E> {
      *
      * const other = Result.try(() => 5); // same as Result.ok(5)
      * ```
+     *
+     * @param func The function to run.
      */
     static try<T, E>(func: () => T): Result<T, E> {
         try {
             return Result.ok(func());
+        } catch (error) {
+            return Result.error(error) as Result<T, E>;
+        }
+    }
+    /**
+     * Identical to {@link Result#try}, but the function is run asynchronously.
+     * Runs an async function and returns the function's return value as a Result.
+     * If the function throws an error, the error will be returned instead.
+     *
+     * @example
+     * ```ts
+     * const result = await Result.tryAsync(async () => {
+     *     throw new Error("Something went wrong");
+     * }); // same as Result.error(new Error("Something went wrong"))
+     *
+     * const other = await Result.tryAsync(async () => 5); // same as Result.ok(5)
+     * ```
+     *
+     * @param func The function to run.
+     */
+    static async tryAsync<T, E>(func: () => Promise<T>): Promise<Result<T, E>> {
+        try {
+            const value = await func();
+            return Result.ok<T, E>(value);
         } catch (error) {
             return Result.error(error) as Result<T, E>;
         }
@@ -54,13 +85,13 @@ export class Result<T, E> {
      * Returns whether the Result contains a success value. Opposite of {@link Result#isError}.
      */
     isOk(): boolean {
-        return this.value !== undefined;
+        return this.#value !== undefined;
     }
     /**
      * Returns whether the Result contains an error. Opposite of {@link Result#isOk}.
      */
     isError(): boolean {
-        return this.error !== undefined;
+        return this.#error !== undefined;
     }
     /**
      * Calls a function if the Result contains a success value.
@@ -69,8 +100,8 @@ export class Result<T, E> {
      * @returns The object itself for method chaining.
      */
     ifOk(func: (value: T) => void): this {
-        if (this.value !== undefined) {
-            func(this.value);
+        if (this.#value !== undefined) {
+            func(this.#value);
         }
         return this;
     }
@@ -81,8 +112,8 @@ export class Result<T, E> {
      * @returns The object itself for method chaining.
      */
     ifError(func: (error: E) => void): this {
-        if (this.error !== undefined) {
-            func(this.error);
+        if (this.#error !== undefined) {
+            func(this.#error);
         }
         return this;
     }
@@ -94,8 +125,8 @@ export class Result<T, E> {
      * @returns The object itself for method chaining.
      */
     ifOkOrElse(func: (value: T) => void, elseFunc: () => void): this {
-        if (this.value !== undefined) {
-            func(this.value);
+        if (this.#value !== undefined) {
+            func(this.#value);
         } else {
             elseFunc();
         }
@@ -108,12 +139,12 @@ export class Result<T, E> {
      */
     filter(func: (value: T) => boolean): Result<T, E> {
         if (this.isError()) {
-            return Result.error(this.error!);
+            return Result.error(this.#error!);
         }
-        if (func(this.value!)) {
-            return Result.ok(this.value!);
+        if (func(this.#value!)) {
+            return Result.ok(this.#value!);
         }
-        return Result.error(this.error!);
+        return Result.error(this.#error!);
     }
     /**
      * If the Result contains a success value, returns a new Result with the value mapped by the function. If the Result contains an error, returns the erroring Result.
@@ -122,9 +153,9 @@ export class Result<T, E> {
      */
     map<U>(func: (value: T) => U): Result<U, E> {
         if (this.isError()) {
-            return Result.error(this.error!);
+            return Result.error(this.#error!);
         }
-        return Result.ok(func(this.value!));
+        return Result.ok(func(this.#value!));
     }
     /**
      * If the Result contains an error, returns a new Result with the error mapped by the function. If the Result contains a success value, returns the success Result.
@@ -133,9 +164,9 @@ export class Result<T, E> {
      */
     mapError<F>(func: (error: E) => F): Result<T, F> {
         if (this.isOk()) {
-            return Result.ok(this.value!);
+            return Result.ok(this.#value!);
         }
-        return Result.error(func(this.error!));
+        return Result.error(func(this.#error!));
     }
     /**
      * If the Result contains a success value, returns a new Result with the value mapped by the function. If the Result contains an error, returns a new Result with the error mapped by the function.
@@ -144,28 +175,28 @@ export class Result<T, E> {
      * @param errorFunc The function to map the error with. The error will be passed as the first argument.
      */
     mapBoth<U, F>(func: (value: T) => U, errorFunc: (error: E) => F): Result<U, F> {
-        if (this.value === undefined) {
-            return Result.error(errorFunc(this.error!));
+        if (this.#value === undefined) {
+            return Result.error(errorFunc(this.#error!));
         }
-        return Result.ok(func(this.value));
+        return Result.ok(func(this.#value));
     }
     /**
      * Returns the value of the Result. If the Result contains an error, throws an error.
      */
     get(): T {
-        if (this.value === undefined) {
+        if (this.#value === undefined) {
             throw new GetErrorResult("Cannot get the value of an erroring Result.");
         }
-        return this.value;
+        return this.#value;
     }
     /**
      * Returns the error of the Result. If the Result contains a success value, throws an error.
      */
     getError(): E {
-        if (this.error === undefined) {
+        if (this.#error === undefined) {
             throw new GetErrorResult("Cannot get the error of a successful Result.");
         }
-        return this.error;
+        return this.#error;
     }
     /**
      * If the Result contains a success value, returns the value. If the Result contains an error, returns the provided value.
@@ -173,10 +204,10 @@ export class Result<T, E> {
      * @param value The value to return if the Result contains an error.
      */
     getOrElse<U>(value: U): T | U {
-        if (this.value === undefined) {
+        if (this.#value === undefined) {
             return value;
         }
-        return this.value;
+        return this.#value;
     }
     /**
      * If the Result contains an error, returns the error. If the Result contains a success value, returns the provided error.
@@ -184,10 +215,10 @@ export class Result<T, E> {
      * @param error The error to return if the Result contains a success value.
      */
     getErrorOrElse<U>(error: U): E | U {
-        if (this.error === undefined) {
+        if (this.#error === undefined) {
             return error;
         }
-        return this.error;
+        return this.#error;
     }
     /**
      * If the Result contains a success value, returns the value. If the Result contains an error, returns the value returned by the provided function.
@@ -196,10 +227,10 @@ export class Result<T, E> {
      * @returns The value returned by the function.
      */
     getOrElseGet<U>(func: () => U): T | U {
-        if (this.value === undefined) {
+        if (this.#value === undefined) {
             return func();
         }
-        return this.value;
+        return this.#value;
     }
     /**
      * If the Result contains an error, returns the error. If the Result contains a success value, returns the error returned by the provided function.
@@ -208,10 +239,10 @@ export class Result<T, E> {
      * @returns The error returned by the function.
      */
     getErrorOrElseGet<U>(func: () => U): E | U {
-        if (this.error === undefined) {
+        if (this.#error === undefined) {
             return func();
         }
-        return this.error;
+        return this.#error;
     }
     /**
      * If the Result contains a success value, returns the value. If the Result contains an error, throws the error returned by the provided function.
@@ -220,10 +251,10 @@ export class Result<T, E> {
      * @returns The value of the Result.
      */
     getOrElseThrow(func: () => Error): T {
-        if (this.value === undefined) {
+        if (this.#value === undefined) {
             throw func();
         }
-        return this.value;
+        return this.#value;
     }
     /**
      * If the Result contains an error, returns the error. If the Result contains a success value, throws the error returned by the provided function.
@@ -232,15 +263,15 @@ export class Result<T, E> {
      * @returns The error of the Result.
      */
     getErrorOrElseThrow(func: () => Error): E {
-        if (this.error === undefined) {
+        if (this.#error === undefined) {
             throw func();
         }
-        return this.error;
+        return this.#error;
     }
     /**
      * Converts the Result to an Optional. If the Result contains a success value, the Optional will contain the value. If the Result contains an error, the Optional will be empty.
      */
     getAsOptional(): Optional<T> {
-        return Optional.of(this.value);
+        return Optional.of(this.#value);
     }
 }
