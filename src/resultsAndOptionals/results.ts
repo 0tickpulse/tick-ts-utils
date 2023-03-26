@@ -124,11 +124,11 @@ export class Result<T, E> {
      * @param elseFunc The function to call if the Result contains an error. The error will be passed as the first argument.
      * @returns The object itself for method chaining.
      */
-    ifOkOrElse(func: (value: T) => void, elseFunc: () => void): this {
+    ifOkOrElse(func: (value: T) => void, elseFunc: (error: E) => void): this {
         if (this.#value !== undefined) {
             func(this.#value);
         } else {
-            elseFunc();
+            elseFunc(this.#error!);
         }
         return this;
     }
