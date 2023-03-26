@@ -1,5 +1,9 @@
 # Changelogs
 
+## 4.1.2
+
+- `Result#ifOkOrElse`'s second argument now accepts a function that takes the error as the first argument.
+
 ## 4.1.1
 
 - Forgot to build before publishing
