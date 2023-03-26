@@ -1,5 +1,9 @@
 # Changelogs
 
+## 4.1.1
+
+- Forgot to build before publishing
+
 ## 4.1.0
 
 - New math category wih functions `randomBoolean`, `randomInt`, `randomFloat`, `randomElement`, and `sum`
