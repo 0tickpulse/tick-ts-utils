@@ -6,6 +6,7 @@ export * as fetchWithZod from "./fetchWithZod/exports.js";
 export * as functions from "./functions/exports.js";
 export * as iterators from "./iterators/exports.js";
 export * as match from "./match/exports.js";
+export * as math from "./math/exports.js";
 export * as resultsAndOptionals from "./resultsAndOptionals/exports.js";
 export * as strings from "./strings/exports.js";
 export * as terminal from "./terminal/exports.js";

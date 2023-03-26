@@ -2,6 +2,7 @@
  * Returns a random boolean.
  *
  * @param chance The chance of the boolean being true. Defaults to 0.5 (equal).
+ * @category Math
  */
 export function randomBoolean(chance = 0.5): boolean {
     return Math.random() < chance;
@@ -13,6 +14,7 @@ export function randomBoolean(chance = 0.5): boolean {
  *
  * @param min The minimum value.
  * @param max The maximum value.
+ * @category Math
  */
 export function randomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -23,6 +25,7 @@ export function randomInt(min: number, max: number): number {
  *
  * @param min The minimum value.
  * @param max The maximum value.
+ * @category Math
  */
 export function randomFloat(min: number, max: number): number {
     return Math.random() * (max - min) + min;
@@ -33,6 +36,7 @@ export function randomFloat(min: number, max: number): number {
  * Equivalent to `array[randomInt(0, array.length - 1)]`.
  *
  * @param array The array to get a random element from.
+ * @category Math
  */
 export function randomElement<T>(array: T[]): T {
     return array[randomInt(0, array.length - 1)];
@@ -42,6 +46,7 @@ export function randomElement<T>(array: T[]): T {
  * Returns the sum of all elements in an array.
  *
  * @param array The array to sum.
+ * @category Math
  */
 export function sum(array: number[]): number {
     return array.reduce((a, b) => a + b);
@@ -53,6 +58,7 @@ export function sum(array: number[]): number {
  *
  * @param array The array to get a random element from.
  * @param weights The weights for each element.
+ * @category Math
  */
 export function randomElementWeighted<T>(array: T[], weights: number[]): T {
     const totalWeight = sum(weights);

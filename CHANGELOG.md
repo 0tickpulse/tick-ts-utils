@@ -1,5 +1,10 @@
 # Changelogs
 
+## 4.1.0
+
+- New math category wih functions `randomBoolean`, `randomInt`, `randomFloat`, `randomElement`, and `sum`
+- New `Result#tryAsync` method
+
 ## 4.0.0
 
 - Removed the logger. It was too buggy and doesn't fit in with the rest of the library.
