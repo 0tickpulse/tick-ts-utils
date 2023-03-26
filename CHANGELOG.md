@@ -1,5 +1,10 @@
 # Changelogs
 
+## 4.2.0
+
+- Added a `Color` class.
+- Fixed some code formatting issues.
+
 ## 4.1.2
 
 - `Result#ifOkOrElse`'s second argument now accepts a function that takes the error as the first argument.

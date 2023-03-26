@@ -1,3 +1,4 @@
+export * from "./color/exports.js";
 export * from "./comparisons/exports.js";
 export * from "./deepClone/exports.js";
 export * from "./deepEquals/exports.js";

@@ -96,6 +96,7 @@ function internalDeepClone<T>(value: T, map = new WeakMap()): T {
     return cloned;
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 function isObjectOrFunction(value: unknown): value is object | Function {
     return typeof value === "object" || typeof value === "function";
 }

@@ -91,7 +91,7 @@ export class Duration implements DeepEquals, Comparable<Duration> {
      * @param words If true, will use words (like "years") instead of single letters (like "y"), and will use commas and "and" to separate units.
      * @returns A human-readable string representing this duration.
      */
-    format(words = false) {
+    format(words = false): string {
         if (this.milliseconds === 0) {
             return "instantly";
         }

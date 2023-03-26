@@ -26,7 +26,7 @@ export interface Comparable<T> {
  * @returns The flattened comparison result.
  * @category Comparisons
  */
-export function flattenComparison(comparison: number) {
+export function flattenComparison(comparison: number): ComparisonResult {
     if (comparison < 0) {
         return -1;
     }
