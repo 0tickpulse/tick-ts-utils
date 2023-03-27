@@ -10,7 +10,8 @@
         "clean": "rm -rf out",
         "cleanWindows": "rmdir /s /q out",
         "typedoc": "pnpm exec typedoc --out docs ./src --plugin @mxssfd/typedoc-theme --theme my-theme",
-        "prettier": "pnpm exec prettier -w ./src"
+        "prettier": "pnpm exec prettier -w ./src",
+        "publish": "pnpm run build && pnpm run typedoc && pnpm publish --access public"
     },
     "author": "0TickPulse",
     "license": "AGPL-3.0-or-later",

@@ -1,3 +1,5 @@
+import { NotUndefined } from "../internal.js";
+
 /**
  * An error that is thrown when trying to get the value of an empty Optional.
  *
@@ -108,7 +110,7 @@ export class Optional<T> {
      *
      * @param func The function to map the value to. The value will be passed as the first argument.
      */
-    map<U>(func: (value: T) => U): Optional<U> {
+    map<U>(func: (value: T) => U | undefined): Optional<U> {
         if (this.#value === undefined) {
             return Optional.empty();
         }
