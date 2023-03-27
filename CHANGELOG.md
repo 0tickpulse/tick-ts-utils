@@ -1,5 +1,9 @@
 # Changelogs
 
+## 4.2.2
+
+- Artificial version bump to fix a bug with the npm registry.
+
 ## 4.2.1
 
 - improved `Optional#map` typing
