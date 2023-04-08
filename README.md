@@ -12,7 +12,7 @@ yarn add tick-ts-utils
 
 ## 📖 Usage
 
-After installing the package, you can import the functions you want to use.
+After installing the package, you can import the things you want to use.
 
 ```ts
 import { emptyFunction } from "tick-ts-utils";
@@ -20,7 +20,7 @@ import { emptyFunction } from "tick-ts-utils";
 await someAsyncFunction().catch(emptyFunction);
 ```
 
-You can also import `tick-ts-utils/out/namespaced.js` to import all functions under a namespace.
+You can also import `tick-ts-utils/out/namespaced.js` to everything under a namespace.
 
 ```ts
 import { functions } from "tick-ts-utils/out/namespaced.js";
