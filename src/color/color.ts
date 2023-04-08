@@ -24,9 +24,9 @@ export class Color implements Cloneable<Color>, DeepEquals {
          */
         public blue: number,
         /**
-         * The alpha value of this color as a number from 0 to 255.
+         * The alpha value of this color as a number from 0 to 1.
          */
-        public alpha = 255,
+        public alpha = 1,
     ) {}
     /**
      * Parses a hex string into a color. Does not support the shorthand hex format.
@@ -56,9 +56,9 @@ export class Color implements Cloneable<Color>, DeepEquals {
      * @param magenta The magenta value of the color as a number from 0 to 1.
      * @param yellow  The yellow value of the color as a number from 0 to 1.
      * @param black   The black value of the color as a number from 0 to 1.
-     * @param alpha   The alpha value of the color as a number from 0 to 255.
+     * @param alpha   The alpha value of the color as a number from 0 to 1.
      */
-    static fromCMYK(cyan: number, magenta: number, yellow: number, black: number, alpha = 255): Color {
+    static fromCMYK(cyan: number, magenta: number, yellow: number, black: number, alpha = 1): Color {
         const cmyk = (n: number): number => Math.round(255 * (1 - n) * (1 - black));
         return new Color(cmyk(cyan), cmyk(magenta), cmyk(yellow), alpha);
     }
@@ -69,9 +69,9 @@ export class Color implements Cloneable<Color>, DeepEquals {
      * @param hue        The hue value of the color as a number from 0 to 360.
      * @param saturation The saturation value of the color as a number from 0 to 1.
      * @param lightness  The lightness value of the color as a number from 0 to 1.
-     * @param alpha      The alpha value of the color as a number from 0 to 255.
+     * @param alpha      The alpha value of the color as a number from 0 to 1.
      */
-    static fromHSL(hue: number, saturation: number, lightness: number, alpha = 255): Color {
+    static fromHSL(hue: number, saturation: number, lightness: number, alpha = 1): Color {
         const c = (1 - Math.abs(2 * lightness - 1)) * saturation;
         const x = c * (1 - Math.abs(((hue / 60) % 2) - 1));
         const m = lightness - c / 2;
@@ -100,9 +100,9 @@ export class Color implements Cloneable<Color>, DeepEquals {
      * @param hue        The hue value of the color as a number from 0 to 360.
      * @param saturation The saturation value of the color as a number from 0 to 1.
      * @param value      The value value of the color as a number from 0 to 1.
-     * @param alpha      The alpha value of the color as a number from 0 to 255.
+     * @param alpha      The alpha value of the color as a number from 0 to 1.
      */
-    static fromHSV(hue: number, saturation: number, value: number, alpha = 255): Color {
+    static fromHSV(hue: number, saturation: number, value: number, alpha = 1): Color {
         const c = value * saturation;
         const x = c * (1 - Math.abs(((hue / 60) % 2) - 1));
         const m = value - c;
@@ -188,6 +188,16 @@ export class Color implements Cloneable<Color>, DeepEquals {
      */
     setBlue(b: number): this {
         this.blue = b;
+        return this;
+    }
+    /**
+     * Sets the alpha value of the color.
+     *
+     * @param a The alpha value of the color as a number from 0 to 1.
+     * @returns The object itself, for method chaining.
+     */
+    setAlpha(a: number): this {
+        this.alpha = a;
         return this;
     }
     /**

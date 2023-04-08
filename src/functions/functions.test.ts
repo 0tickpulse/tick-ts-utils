@@ -7,6 +7,7 @@ test("equalsFunction test", () => {
 
 test("curry test", () => {
     expect(curry((a: number, b: number) => a + b)(5)(5)).toEqual(10);
+    expect(curry((a: number, b: number, c: number) => a + b + c)(5)(5)(5)).toEqual(15);
 });
 
 test("constant test", () => {

@@ -1,4 +1,14 @@
-import { Comparable, compare, flattenComparison } from "./comparisons.js";
+import {
+    Comparable,
+    compare,
+    flattenComparison,
+    flipComparison,
+    isBetween,
+    isGreaterThan,
+    isGreaterThanOrEqual,
+    isLessThan,
+    isLessThanOrEqual,
+} from "./comparisons.js";
 
 class TestClass implements Comparable<TestClass> {
     constructor(public value: number) {}
@@ -14,6 +24,12 @@ test("flattenComparison", () => {
     expect(flattenComparison(-1)).toEqual(-1);
     expect(flattenComparison(5)).toEqual(1);
     expect(flattenComparison(-5)).toEqual(-1);
+});
+
+test("flipComparison test", () => {
+    expect(flipComparison(1)).toEqual(-1);
+    expect(flipComparison(-1)).toEqual(1);
+    expect(flipComparison(0)).toEqual(0);
 });
 
 test("compareTo with primitive numbers", () => {
@@ -39,4 +55,31 @@ test("compareTo with Comparable instances", () => {
     expect(compare(new TestClass(1), new TestClass(1))).toEqual(0);
     expect(compare(new TestClass(1), new TestClass(2))).toEqual(-1);
     expect(compare(new TestClass(2), new TestClass(1))).toEqual(1);
+});
+
+test("compare with Comparable instances where 1st arg doesn't have compare", () => {
+    expect(compare(Object.assign(new TestClass(1), { compareTo: undefined }), new TestClass(1))).toEqual(0);
+    expect(compare(Object.assign(new TestClass(1), { compareTo: undefined }), new TestClass(2))).toEqual(-1);
+    expect(compare(Object.assign(new TestClass(2), { compareTo: undefined }), new TestClass(1))).toEqual(1);
+});
+
+test("isGreaterThan, isLessThan, etc tests", () => {
+    expect(isGreaterThan(3, 1)).toEqual(true);
+    expect(isGreaterThan(1, 3)).toEqual(false);
+    expect(isGreaterThan(1, 1)).toEqual(false);
+    expect(isGreaterThanOrEqual(3, 1)).toEqual(true);
+    expect(isGreaterThanOrEqual(1, 3)).toEqual(false);
+    expect(isGreaterThanOrEqual(1, 1)).toEqual(true);
+    expect(isLessThan(3, 1)).toEqual(false);
+    expect(isLessThan(1, 3)).toEqual(true);
+    expect(isLessThan(1, 1)).toEqual(false);
+    expect(isLessThanOrEqual(3, 1)).toEqual(false);
+    expect(isLessThanOrEqual(1, 3)).toEqual(true);
+    expect(isLessThanOrEqual(1, 1)).toEqual(true);
+    expect(isBetween(3, 1, 5)).toEqual(true);
+    expect(isBetween(3, 5, 1)).toEqual(false);
+    expect(isBetween(3, 1, 2)).toEqual(false);
+    expect(isBetween(3, 4, 5)).toEqual(false);
+    expect(isBetween(3, 3, 5, true)).toEqual(true);
+    expect(isBetween(3, 3, 5, false)).toEqual(false);
 });

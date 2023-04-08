@@ -14,6 +14,17 @@ const DURATION_MAP = {
     years: 365 * 24 * 60 * 60 * 1000,
 } as const satisfies Record<string, number>;
 
+const UNITS_SHORTENED = {
+    milliseconds: "ms",
+    seconds: "s",
+    minutes: "m",
+    hours: "h",
+    days: "d",
+    weeks: "w",
+    months: "m",
+    years: "y",
+} as const satisfies Record<keyof typeof DURATION_MAP, string>;
+
 /**
  * Immutable class representing a duration of time.
  *
@@ -123,7 +134,7 @@ export class Duration implements DeepEquals, Comparable<Duration> {
             if (value === 0) {
                 continue;
             }
-            result.push(`${value}${words ? ` ${unit}` : unit[0]}${words && value !== 1 ? "s" : ""}`);
+            result.push(value + (words ? ` ${unit.slice(0, value === 1 ? -1 : undefined)}` : UNITS_SHORTENED[unit]));
         }
         if (words) {
             if (result.length === 1) {

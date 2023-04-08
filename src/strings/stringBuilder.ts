@@ -14,7 +14,45 @@ import { Cloneable } from "../index.js";
  * 1. Use {@link StringBuilder#toString} to get the string representation of the string builder.
  * 1. Clear the string builder if you want to reuse it.
  *
- * Due to the fact that JavaScript does not have a `char` type, the string builder uses a string of length 1 as a character. This can lead to some performance issues.
+ * ## Performance
+ *
+ * Due to the fact that JavaScript does not have a `char` type, the string builder uses a string of length 1 as a character.
+ * Having an array of strings instead of an array of characters has a significant performance impact.
+ * In addition, strings have to be split into an array of characters before they can be appended to the string builder. This is highly performance-intensive.
+ * All this, combined with other factors, makes the string builder significantly slower than a regular string.
+ * To prove this, I ran a benchmark to compare the performance of this string builder to a regular string.
+ *
+ * ```ts
+ * const n = 100000;
+ *
+ * const sb = new StringBuilder();
+ * const start = Date.now();
+ * for (let i = 0; i < n; i++) {
+ *     sb.append("Hello, world!");
+ * }
+ * const sbTime = Date.now() - start;
+ *
+ * const start2 = Date.now();
+ * let s = "";
+ * for (let i = 0; i < n; i++) {
+ *     s += "Hello, world!";
+ * }
+ * const sTime = Date.now() - start2;
+ *
+ * console.log(`StringBuilder took ${sbTime}ms`);
+ * console.log(`String took ${sTime}ms`);
+ * ```
+ *
+ * The benchmark was run on a Mac Studio with a M1 Ultra chip.
+ * The results were:
+ *
+ * | Implementation | Time (ms) |
+ * | -------------- | --------- |
+ * | StringBuilder  | 22        |
+ * | String         | 1         |
+ *
+ * Clearly, the string builder has a significant performance impact.
+ * Hence, in performance-intensive code, it is recommended to use a regular string.
  *
  * @example
  * ```ts

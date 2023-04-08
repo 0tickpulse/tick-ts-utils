@@ -1,4 +1,3 @@
-import { StringBuilder } from "../index.js";
 import { deepClone } from "../deepClone/deepClone.js";
 
 /**

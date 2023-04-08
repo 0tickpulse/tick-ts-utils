@@ -36,7 +36,16 @@ export function flattenComparison(comparison: number): ComparisonResult {
     return 0;
 }
 
-function flipComparison(comparison: ComparisonResult): ComparisonResult {
+/**
+ * Flips a comparison result. (Positive numbers become -1, negative numbers become 1, and 0 stays 0.)
+ * Using the regular `-` operator on a `ComparisonResult` will not work, because TypeScript will not allow it.
+ *
+ * @param comparison The comparison result to flip.
+ */
+export function flipComparison(comparison: ComparisonResult): ComparisonResult {
+    if (comparison === 0) {
+        return 0; // 0 and -0 are different
+    }
     return -comparison as ComparisonResult; // typescript isn't smart enough to figure this out
 }
 
@@ -137,12 +146,13 @@ export function isLessThanOrEqual<T>(value1: T, value2: T): boolean {
 
 /**
  * Checks if `value` is between a range, `lowerBound` and `upperBound`.
+ * In other words, checks if `lowerBound <= value <= upperBound`.
+ * Always returns false if `lowerBound > upperBound`.
  *
  * @param value      The value to check.
  * @param lowerBound The lower bound of the range.
  * @param upperBound The upper bound of the range.
  * @param inclusive  Whether to include the bounds in the range.
- * @returns
  */
 export function isBetween<T>(value: T, lowerBound: T, upperBound: T, inclusive = false): boolean {
     return inclusive

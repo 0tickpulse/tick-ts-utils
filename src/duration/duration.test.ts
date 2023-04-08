@@ -17,11 +17,21 @@ test("duration arithmetic test", () => {
     expect(Duration.fromUnit("hours", 1).multiply(2).as("hours")).toEqual(2);
     expect(Duration.fromUnit("hours", 1).addUnit("hours", 1).as("hours")).toEqual(2);
     expect(Duration.fromUnit("hours", 1).subtractUnit("hours", 1).as("hours")).toEqual(0);
+    expect(Duration.fromUnit("hours", 1).divide(2).as("hours")).toEqual(0.5);
 });
 
 test("duration format test", () => {
+    expect(new Duration(0).format()).toEqual("instantly");
+    expect(new Duration(Infinity).format()).toEqual("forever");
+    expect(new Duration(1000 * 60).format(true)).toEqual("1 minute");
     expect(new Duration(1000 * 60).format()).toEqual("1m");
     expect(new Duration(1000 * 60 * 60).format()).toEqual("1h");
     expect(new Duration(1000 * 60 * 60 * 24).format()).toEqual("1d");
     expect(Duration.fromUnit("months", 5).addUnit("weeks", 2).format()).toEqual("5m 2w");
+    expect(Duration.fromUnit("months", 5).addUnit("weeks", 2).format(true)).toEqual("5 months and 2 weeks");
 });
+
+test("duration toPrimitive test", () => {
+    expect(+new Duration(0)).toEqual(0);
+    expect("" + new Duration(0)).toEqual("instantly");
+})

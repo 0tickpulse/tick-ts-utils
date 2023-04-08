@@ -67,6 +67,8 @@ function internalDeepClone<T>(value: T, map = new WeakMap()): T {
         return value;
     }
 
+    console.log(`Cloning ${value} of type ${typeof value}`);
+
     if (typeof value === "function") {
         return value;
     }
@@ -78,7 +80,7 @@ function internalDeepClone<T>(value: T, map = new WeakMap()): T {
         return new RegExp(value) as T;
     }
 
-    const toClone = value as unknown as Record<PropertyKey, unknown>;
+    const toClone = value as Record<PropertyKey, unknown>;
     //      ^?
 
     if (map.has(toClone)) {
@@ -98,7 +100,7 @@ function internalDeepClone<T>(value: T, map = new WeakMap()): T {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function isObjectOrFunction(value: unknown): value is object | Function {
-    return typeof value === "object" || typeof value === "function";
+    return Boolean(value) && typeof value === "object" || typeof value === "function";
 }
 
 function hasDeepCloneMethod<T>(value: T): value is T & { deepClone(): T } {
