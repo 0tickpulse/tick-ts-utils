@@ -1,6 +1,18 @@
+/**
+ * Colors a string with a color code and resets the color after the string.
+ *
+ * @param string The string to color.
+ * @param code The color code to use.
+ */
 export function color(string: string, code: string): string {
     return `${code}${string}${codes.reset}`;
 }
+/**
+ * Colors a string with a basic color and resets the color after the string.
+ *
+ * @param string The string to color.
+ * @param color The color to use.
+ */
 export function colorBasic(string: string, color: keyof typeof basic): string {
     return `${basic[color].fore}${string}${codes.reset}`;
 }

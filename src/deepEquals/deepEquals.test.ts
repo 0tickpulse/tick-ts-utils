@@ -52,6 +52,7 @@ test("deepEquals with instances of classes", () => {
 
 test("deepEquals with instances of classes with equals method", () => {
     const obj = new TestClassWithEquals(1, 2);
+    // equality is based on the sum of the values
     expect(deepEquals(new TestClassWithEquals(1, 2), new TestClassWithEquals(1, 2))).toEqual(true);
     expect(deepEquals(new TestClassWithEquals(1, 2), new TestClassWithEquals(2, 1))).toEqual(true);
     expect(deepEquals(new TestClassWithEquals(1, 2), new TestClassWithEquals(3, 4))).toEqual(false);

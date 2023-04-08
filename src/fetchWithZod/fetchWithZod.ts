@@ -27,8 +27,22 @@ import { Result } from "../resultsAndOptionals/results.js";
  * @returns A {@link Result} object containing the parsed data if the request was successful and the validation was successful, or the ZodError if either of those failed.
  * @category Typeguarding
  */
-export async function fetchWithZod<T>(url: string, schema: z.ZodSchema<T>): Promise<Result<T, z.ZodError>> {
-    return fetch(url)
+export async function fetchWithZod<T>(url: string, schema: z.ZodSchema<T>): Promise<Result<T, z.ZodError>>;
+/**
+ * An implementation of a type-safe fetch making use of the Zod library for validation.
+ * This overload of the function allows you to pass in a {@link RequestInit} object, which can be used to configure the request.
+ *
+ * @param url    The URL to fetch.
+ * @param init   The {@link RequestInit} object to configure the request.
+ * @param schema The schema to validate the response against.
+ * @returns A {@link Result} object containing the parsed data if the request was successful and the validation was successful, or the ZodError if either of those failed.
+ * @category Typeguarding
+ */
+export async function fetchWithZod<T>(url: string, init: RequestInit, schema: z.ZodSchema<T>): Promise<Result<T, z.ZodError>>;
+export async function fetchWithZod<T>(url: string, arg2: z.ZodSchema<T> | RequestInit, arg3?: z.ZodSchema<T>): Promise<Result<T, z.ZodError>> {
+    const schema = arg3 ?? (arg2 as z.ZodSchema<T>);
+    const init = arg3 ? (arg2 as RequestInit) : undefined;
+    return fetch(url, init)
         .then((response) => response.json())
         .then((data) => {
             try {

@@ -30,6 +30,14 @@ export class Color implements Cloneable<Color>, DeepEquals {
     ) {}
     /**
      * Parses a hex string into a color. Does not support the shorthand hex format.
+     *
+     * @example
+     * ```ts
+     * const color = Color.parseHex("#ff0000"); // red
+     * ```
+     *
+     * @param hex The hex string to parse.
+     * @returns A Result containing the parsed color or an error.
      */
     static parseHex(hex: string): Result<Color, ColorHexParseError> {
         // regex
@@ -42,6 +50,13 @@ export class Color implements Cloneable<Color>, DeepEquals {
     }
     /**
      * Constructs a new color from the specified CMYK values with an optional alpha value.
+     *
+     * @see https://en.wikipedia.org/wiki/CMYK_color_model
+     * @param cyan    The cyan value of the color as a number from 0 to 1.
+     * @param magenta The magenta value of the color as a number from 0 to 1.
+     * @param yellow  The yellow value of the color as a number from 0 to 1.
+     * @param black   The black value of the color as a number from 0 to 1.
+     * @param alpha   The alpha value of the color as a number from 0 to 255.
      */
     static fromCMYK(cyan: number, magenta: number, yellow: number, black: number, alpha = 255): Color {
         const cmyk = (n: number): number => Math.round(255 * (1 - n) * (1 - black));
@@ -49,6 +64,12 @@ export class Color implements Cloneable<Color>, DeepEquals {
     }
     /**
      * Constructs a new color from the specified HSL values with an optional alpha value.
+     *
+     * @see https://en.wikipedia.org/wiki/HSL_and_HSV
+     * @param hue        The hue value of the color as a number from 0 to 360.
+     * @param saturation The saturation value of the color as a number from 0 to 1.
+     * @param lightness  The lightness value of the color as a number from 0 to 1.
+     * @param alpha      The alpha value of the color as a number from 0 to 255.
      */
     static fromHSL(hue: number, saturation: number, lightness: number, alpha = 255): Color {
         const c = (1 - Math.abs(2 * lightness - 1)) * saturation;
@@ -72,6 +93,15 @@ export class Color implements Cloneable<Color>, DeepEquals {
         }
         return new Color(rgb(c), rgb(0), rgb(x), alpha);
     }
+    /**
+     * Constructs a new color from the specified HSV values with an optional alpha value.
+     *
+     * @see https://en.wikipedia.org/wiki/HSL_and_HSV
+     * @param hue        The hue value of the color as a number from 0 to 360.
+     * @param saturation The saturation value of the color as a number from 0 to 1.
+     * @param value      The value value of the color as a number from 0 to 1.
+     * @param alpha      The alpha value of the color as a number from 0 to 255.
+     */
     static fromHSV(hue: number, saturation: number, value: number, alpha = 255): Color {
         const c = value * saturation;
         const x = c * (1 - Math.abs(((hue / 60) % 2) - 1));
@@ -103,10 +133,21 @@ export class Color implements Cloneable<Color>, DeepEquals {
     deepClone(): Color {
         return new Color(this.red, this.green, this.blue, this.alpha);
     }
+    /**
+     * Returns the color as a hex string, optionally including the alpha value.
+     *
+     * @param supportsAlpha Whether the hex string should include the alpha value.
+     */
     toHex(supportsAlpha = false): string {
         const hex = (n: number): string => n.toString(16).padStart(2, "0");
         return `#${hex(this.red)}${hex(this.green)}${hex(this.blue)}${supportsAlpha ? hex(this.alpha) : ""}`;
     }
+    /**
+     * Returns the color as a CSS string, including the alpha value.
+     * Format is `rgba(r, g, b, a)`.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#rgb()_and_rgba()
+     */
     toCss(): string {
         return `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`;
     }
@@ -119,14 +160,32 @@ export class Color implements Cloneable<Color>, DeepEquals {
     toAnsiColorCode(): string {
         return foregroundColor(this.red, this.green, this.blue);
     }
+    /**
+     * Sets the red value of the color.
+     *
+     * @param r The red value of the color as a number from 0 to 255.
+     * @returns The object itself, for method chaining.
+     */
     setRed(r: number): this {
         this.red = r;
         return this;
     }
+    /**
+     * Sets the green value of the color.
+     *
+     * @param g The green value of the color as a number from 0 to 255.
+     * @returns The object itself, for method chaining.
+     */
     setGreen(g: number): this {
         this.green = g;
         return this;
     }
+    /**
+     * Sets the blue value of the color.
+     *
+     * @param b The blue value of the color as a number from 0 to 255.
+     * @returns The object itself, for method chaining.
+     */
     setBlue(b: number): this {
         this.blue = b;
         return this;

@@ -14,7 +14,7 @@ import { deepClone } from "../deepClone/deepClone.js";
 export function range(end: number): number[];
 export function range(start: number, end: number): number[];
 export function range(start: number, end: number, step: number): number[];
-export function range(start: number, end?: number, step?: number) {
+export function range(start: number, end?: number, step?: number): number[] {
     let _start = end === undefined ? 0 : start;
     const _end = end === undefined ? start : end;
     let _step = step === undefined ? 1 : step;
@@ -40,7 +40,7 @@ export function range(start: number, end?: number, step?: number) {
 export function mapObject<T extends Record<PropertyKey, unknown>, U>(
     object: T,
     predicate: <K extends keyof T>(key: K, value: T[K], index: number) => U,
-) {
+): Record<PropertyKey, U> {
     const result: Record<PropertyKey, U> = {};
     for (let i = 0; i < Object.keys(object).length; i++) {
         const key = Object.keys(object)[i];
@@ -128,7 +128,7 @@ export function asArray<T>(value: T | T[]): T[] {
  * @param clone Whether to clone the value using this library's `deepClone` function.
  * @category Iterators
  */
-export function fill<T>(value: T, count: number, clone = false) {
+export function fill<T>(value: T, count: number, clone = false): T[] {
     const result: T[] = [];
     for (let i = 0; i < count; i++) {
         result.push(clone ? deepClone(value) : value);
@@ -140,14 +140,30 @@ export function fill<T>(value: T, count: number, clone = false) {
  * Creates an array of the specified length filled with the return value of the specified iteratee.
  *
  * @param iteratee The iteratee to call.
- * @param count The number of times to call the iteratee.
- * @param clone Whether to clone the return value of the iteratee using this library's `deepClone` function.
+ * @param count    The number of times to call the iteratee.
+ * @param clone    Whether to clone the return value of the iteratee using this library's `deepClone` function.
  * @category Iterators
  */
-export function fillWith<T>(iteratee: (index: number) => T, count: number, clone = false) {
+export function fillWith<T>(iteratee: (index: number) => T, count: number, clone = false): T[] {
     const result: T[] = [];
     for (let i = 0; i < count; i++) {
         result.push(clone ? deepClone(iteratee(i)) : iteratee(i));
+    }
+    return result;
+}
+
+/**
+ * Converts a Map to an object.
+ *
+ * Usually, `Object.fromEntries` is sufficient, but this function provides slighlty better type safety.
+ *
+ * @param map The map to convert.
+ * @category Iterators
+ */
+export function mapToObject<K extends PropertyKey, V>(map: Map<K, V>): Record<K, V> {
+    const result: Record<K, V> = {} as Record<K, V>;
+    for (const [key, value] of map) {
+        result[key] = value;
     }
     return result;
 }

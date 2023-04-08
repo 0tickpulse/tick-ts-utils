@@ -1,4 +1,4 @@
-import { Comparable, DeepEquals } from "../index.js";
+import { Comparable, ComparisonResult, DeepEquals } from "../index.js";
 
 /**
  * A map of duration units to their millisecond equivalents.
@@ -60,6 +60,10 @@ export class Duration implements DeepEquals, Comparable<Duration> {
      * A duration that represents no time.
      */
     static readonly INSTANT = new Duration(0);
+    /**
+     * A duration that represents forever.
+     */
+    static readonly FOREVER = new Duration(Infinity);
     constructor(public readonly milliseconds: number) {}
     /**
      * Constructs a new Duration from a unit and an amount.
@@ -95,6 +99,9 @@ export class Duration implements DeepEquals, Comparable<Duration> {
         if (this.milliseconds === 0) {
             return "instantly";
         }
+        if (this.milliseconds === Infinity) {
+            return "forever";
+        }
         const units = new Map<keyof typeof DURATION_MAP, number>([
             ["years", 0],
             ["months", 0],
@@ -106,7 +113,7 @@ export class Duration implements DeepEquals, Comparable<Duration> {
             ["milliseconds", 0],
         ]);
         let remaining = this.milliseconds;
-        for (const [unit, index] of units) {
+        for (const [unit] of units) {
             const value = Math.floor(remaining / DURATION_MAP[unit]);
             units.set(unit, value);
             remaining -= value * DURATION_MAP[unit];
@@ -134,37 +141,69 @@ export class Duration implements DeepEquals, Comparable<Duration> {
         return this.toString();
     }
 
+    /**
+     * Adds this duration to another duration.
+     *
+     * @param duration The duration to add.
+     * @returns A new duration representing the sum of this duration and the other duration.
+     */
     add(duration: Duration): Duration {
         return new Duration(this.milliseconds + duration.milliseconds);
     }
 
+    /**
+     * Adds this duration to another duration using a unit.
+     * This is equivalent to `duration.add(Duration.fromUnit(unit, amount))`.
+     *
+     * @param unit The unit to use.
+     * @param amount The amount to add.
+     * @returns A new duration representing the sum of this duration and the other duration.
+     */
     addUnit(unit: keyof typeof DURATION_MAP, amount: number): Duration {
         return new Duration(this.milliseconds + amount * DURATION_MAP[unit]);
     }
 
+    /**
+     * Subtracts this duration from another duration.
+     *
+     * @param duration The duration to subtract.
+     * @returns A new duration representing the difference between this duration and the other duration.
+     */
     subtract(duration: Duration): Duration {
         return new Duration(this.milliseconds - duration.milliseconds);
     }
 
+    /**
+     * Subtracts this duration from another duration using a unit.
+     *
+     * @param unit The unit to use.
+     * @param amount The amount to subtract.
+     */
     subtractUnit(unit: keyof typeof DURATION_MAP, amount: number): Duration {
         return new Duration(this.milliseconds - amount * DURATION_MAP[unit]);
     }
 
+    /**
+     * Multiplies this duration by a number.
+     *
+     * @param amount The amount to multiply by.
+     * @returns A new duration representing the product of this duration and the number.
+     */
     multiply(amount: number): Duration {
         return new Duration(this.milliseconds * amount);
     }
 
+    /**
+     * Divides this duration by a number.
+     *
+     * @param amount The amount to divide by.
+     * @returns A new duration representing the quotient of this duration and the number.
+     */
     divide(amount: number): Duration {
         return new Duration(this.milliseconds / amount);
     }
 
-    /**
-     * Compares this duration to another duration.
-     *
-     * @param other The other duration to compare to.
-     * @returns 0 if the durations are equal, 1 if this duration is longer, and -1 if this duration is shorter.
-     */
-    compareTo(other: Duration): 0 | 1 | -1 {
+    compareTo(other: Duration): ComparisonResult {
         return this.milliseconds > other.milliseconds ? 1 : this.milliseconds < other.milliseconds ? -1 : 0;
     }
 
@@ -175,7 +214,7 @@ export class Duration implements DeepEquals, Comparable<Duration> {
      * @param amount The amount of the unit to compare to.
      * @returns 0 if the durations are equal, 1 if this duration is longer, and -1 if this duration is shorter.
      */
-    compareUnit(unit: keyof typeof DURATION_MAP, amount: number): 0 | 1 | -1 {
+    compareUnit(unit: keyof typeof DURATION_MAP, amount: number): ComparisonResult {
         return this.milliseconds > amount * DURATION_MAP[unit] ? 1 : this.milliseconds < amount * DURATION_MAP[unit] ? -1 : 0;
     }
 
@@ -183,10 +222,22 @@ export class Duration implements DeepEquals, Comparable<Duration> {
         return this.format();
     }
 
+    /**
+     * Adds this duration to a date.
+     *
+     * @param date The date to add this duration to.
+     * @returns A new date representing the sum of this duration and the date.
+     */
     after(date: Date): Date {
         return new Date(date.getTime() + this.milliseconds);
     }
 
+    /**
+     * Subtracts this duration from a date.
+     *
+     * @param date The date to subtract this duration from.
+     * @returns A new date representing the difference between this duration and the date.
+     */
     before(date: Date): Date {
         return new Date(date.getTime() - this.milliseconds);
     }

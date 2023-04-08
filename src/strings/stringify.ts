@@ -1,5 +1,6 @@
 /**
  * @deprecated Use `String(value)` instead.
+ *
  * Null-and-undefined-safe string conversion.
  *
  * @param value The value to convert to a string.

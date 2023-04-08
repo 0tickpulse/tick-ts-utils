@@ -1,5 +1,6 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-export default {
+// eslint-disable-next-line no-undef
+module.exports = {
     transform: {
         "\\.[jt]sx?$": ["ts-jest", {
             useESM: true,

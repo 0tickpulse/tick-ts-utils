@@ -1,3 +1,4 @@
+import { groupArrayIntoArrayBy } from "./groupBy.js";
 import { chunkArray, fill, formatArray, range } from "./iterators.js";
 
 test("range single arity test", () => {
@@ -34,4 +35,13 @@ test("fill test with clone", () => {
     const arr2 = fill(obj2, 3, true);
     arr2[0].a = 3;
     expect(arr2).toEqual([{ a: 3 }, { a: 2 }, { a: 2 }]);
+});
+
+test("group by test", () => {
+    const array = [
+        { name: "John", age: 20 },
+        { name: "Jane", age: 20 },
+        { name: "Jack", age: 30 },
+    ];
+    const grouped = groupArrayIntoArrayBy(array, (item) => item.age);
 });
