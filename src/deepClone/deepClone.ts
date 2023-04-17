@@ -100,7 +100,7 @@ function internalDeepClone<T>(value: T, map = new WeakMap()): T {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function isObjectOrFunction(value: unknown): value is object | Function {
-    return Boolean(value) && typeof value === "object" || typeof value === "function";
+    return (Boolean(value) && typeof value === "object") || typeof value === "function";
 }
 
 function hasDeepCloneMethod<T>(value: T): value is T & { deepClone(): T } {
@@ -114,10 +114,9 @@ function hasDeepCloneMethod<T>(value: T): value is T & { deepClone(): T } {
  * @see {@link deepClone} This function uses this interface to allow objects to define their own cloning logic.
  * @category Cloning
  */
-export interface Cloneable<T> {
+export type Cloneable<T> = {
     /**
      * Deep clones the value.
      */
     deepClone(): T;
-}
-
+};

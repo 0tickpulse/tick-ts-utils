@@ -118,6 +118,6 @@ function hasEqualFunction<T>(value: T): value is T & { equals: (other: unknown) 
  *
  * @category Equality
  */
-export interface DeepEquals {
+export type DeepEquals = {
     equals(other: unknown): boolean;
 }
