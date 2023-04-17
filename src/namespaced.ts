@@ -1,5 +1,6 @@
 export * as color from "./color";
 export * as comparisons from "./comparisons";
+export * as dataStructures from "./dataStructures";
 export * as deepClone from "./deepClone";
 export * as deepEquals from "./deepEquals";
 export * as duration from "./duration";

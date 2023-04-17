@@ -1,5 +1,6 @@
 export * from "./color";
 export * from "./comparisons";
+export * from "./dataStructures";
 export * from "./deepClone";
 export * from "./deepEquals";
 export * from "./duration";
