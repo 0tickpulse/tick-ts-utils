@@ -7,7 +7,7 @@ export type ComparisonResult = -1 | 0 | 1;
  * An interface that represents a type that has custom comparison logic.
  * @category Comparisons
  */
-export interface Comparable<T> {
+export type Comparable<T> = {
     /**
      * Compares this object with the specified object for order.
      *
