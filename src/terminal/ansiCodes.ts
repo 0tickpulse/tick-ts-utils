@@ -3,15 +3,19 @@
  *
  * @param string The string to color.
  * @param code The color code to use.
+ * @category Terminal
  */
 export function color(string: string, code: string): string {
     return `${code}${string}${codes.reset}`;
 }
 /**
+ * @deprecated Use the `Color` class instead.
+ *
  * Colors a string with a basic color and resets the color after the string.
  *
  * @param string The string to color.
  * @param color The color to use.
+ * @category Terminal
  */
 export function colorBasic(string: string, color: keyof typeof basic): string {
     return `${basic[color].fore}${string}${codes.reset}`;
@@ -36,6 +40,8 @@ export function alternativeFont(code: number): string {
     return fromSGR(10 + code);
 }
 /**
+ * @deprecated Use the `Color` class instead.
+ *
  * Gets a color code that changes the foreground color of console output to a certain RGB value.
  *
  * @param r The red value of the color.
@@ -47,6 +53,8 @@ export function foregroundColor(r: number, g: number, b: number): string {
     return fromSGR(`38;2;${r};${g};${b}`);
 }
 /**
+ * @deprecated Use the `Color` class instead.
+ *
  * Gets a color code that changes the background color of console output to a certain RGB value.
  *
  * @param r The red value of the color.
@@ -57,6 +65,8 @@ export function backgroundColor(r: number, g: number, b: number): string {
     return fromSGR(`48;2;${r};${g};${b}`);
 }
 /**
+ * @deprecated Use the `Color` class instead.
+ *
  * Gets a color code that changes the underline color of console output to a certain RGB value.
  *
  * @param r The red value of the color.
@@ -147,6 +157,8 @@ export const codes = {
 type Basic = Record<"fore" | "back" | "under", string>;
 
 /**
+ * @deprecated Basic colors are deprecated in favor of the `Color` class.
+ *
  * Converts a RGB color to a map of foreground, background, and underline console color codes.
  *
  * @param red   The red value of the color.
@@ -154,9 +166,13 @@ type Basic = Record<"fore" | "back" | "under", string>;
  * @param blue  The blue value of the color.
  * @category Terminal
  */
-export const generateBasic = (red: number, green: number, blue: number): Basic => {
+export function generateBasic(red: number, green: number, blue: number): Basic {
     return { fore: foregroundColor(red, green, blue), back: backgroundColor(red, green, blue), under: underlineColor(red, green, blue) };
-};
+}
+
+/**
+ * @deprecated Basic colors are deprecated in favor of the `Color` class.
+ */
 export const basic = {
     red: generateBasic(255, 0, 0),
     blue: generateBasic(0, 255, 0),

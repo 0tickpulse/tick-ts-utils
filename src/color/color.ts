@@ -1,4 +1,4 @@
-import { Cloneable, DeepEquals, Result, color, foregroundColor } from "../index.js";
+import { Cloneable, DeepEquals, Result, color, foregroundColor, fromSGR } from "../index.js";
 
 export class ColorHexParseError extends Error {}
 
@@ -10,6 +10,19 @@ export class ColorHexParseError extends Error {}
  * @category Color
  */
 export class Color implements Cloneable<Color>, DeepEquals {
+    static readonly RED = new Color(255, 0, 0);
+    static readonly GREEN = new Color(0, 255, 0);
+    static readonly BLUE = new Color(0, 0, 255);
+    static readonly WHITE = new Color(255, 255, 255);
+    static readonly CYAN = new Color(0, 255, 255);
+    static readonly MAGENTA = new Color(255, 0, 255);
+    static readonly YELLOW = new Color(255, 255, 0);
+    static readonly BLACK = new Color(0, 0, 0);
+    static readonly BROWN = new Color(165, 42, 42);
+    static readonly ORANGE = new Color(255, 165, 0);
+    static readonly PINK = new Color(255, 192, 203);
+    static readonly PURPLE = new Color(128, 0, 128);
+    static readonly GRAY = new Color(128, 128, 128);
     constructor(
         /**
          * The red value of this color as a number from 0 to 255.
@@ -152,13 +165,31 @@ export class Color implements Cloneable<Color>, DeepEquals {
         return `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`;
     }
     /**
-     * Returns the color as an ANSI color code, stripping the alpha value.
+     * @deprecated Use {@link toAnsiForeground} instead.
+     *
+     * Returns the color as an ANSI foreground color code, stripping the alpha value.
      * Identical to foregroundColor.
      *
      * @see foregroundColor
      */
     toAnsiColorCode(): string {
         return foregroundColor(this.red, this.green, this.blue);
+    }
+    /**
+     * Returns the color as an ANSI foreground color code, stripping the alpha value.
+     *
+     * @see https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters
+     */
+    toAnsiForeground(): string {
+        return fromSGR(`38;2;${this.red};${this.green};${this.blue}`);
+    }
+    /**
+     * Returns the color as an ANSI background color code, stripping the alpha value.
+     *
+     * @see https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters
+     */
+    toAnsiBackground(): string {
+        return fromSGR(`48;2;${this.red};${this.green};${this.blue}`);
     }
     /**
      * Sets the red value of the color.
