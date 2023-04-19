@@ -7,6 +7,7 @@ import { hasFunctionWithArity } from "../internal.js";
  * **Note: If you are on node `17.0.0` or above, you can use the native `structuredClone` method instead.**
  *
  * Deep cloning is a technique where an object is copied, but the copy is not a reference to the original object.
+ * Generally, deep cloning `a` will create a new object `b` such that `deepEquals(a, b)` is `true`, but `a === b` is `false`.
  * Take this example:
  *
  * ```ts

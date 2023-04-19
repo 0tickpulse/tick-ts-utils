@@ -1,4 +1,4 @@
-import { Cloneable, DeepEquals, Result, color, foregroundColor, fromSGR } from "../index.js";
+import { Cloneable, DeepEquals, Result, foregroundColor, fromSGR } from "../index.js";
 
 export class ColorHexParseError extends Error {}
 

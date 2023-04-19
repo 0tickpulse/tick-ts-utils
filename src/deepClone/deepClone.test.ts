@@ -7,12 +7,21 @@ class A implements Cloneable<A> {
     }
 }
 
+function testCloneSimple<T>(a: T, b: T): void {
+    // When cloned:
+    // cloned === b should be false
+    // cloned should deep equal b
+    const cloned = deepClone(a);
+    expect(cloned).not.toBe(b);
+    expect(cloned).toEqual(b);
+}
+
 test("deepClone with primitives", () => {
-    expect(deepClone(5)).toEqual(5);
-    expect(deepClone("a")).toEqual("a");
-    expect(deepClone(true)).toEqual(true);
-    expect(deepClone(undefined)).toEqual(undefined);
-    expect(deepClone(null)).toEqual(null);
+    testCloneSimple(5, 5);
+    testCloneSimple("a", "a");
+    testCloneSimple(true, true);
+    testCloneSimple(undefined, undefined);
+    testCloneSimple(null, null);
 });
 
 test("deepClone with objects", () => {
@@ -30,7 +39,7 @@ test("deepClone with instances of classes that implement Cloneable", () => {
 });
 
 test("deepClone with functions", () => {
-    const a = () => 5;
+    const a = (): number => 5;
     const b = deepClone(a);
     expect(b()).toEqual(5);
 });
