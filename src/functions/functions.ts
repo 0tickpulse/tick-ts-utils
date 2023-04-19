@@ -65,6 +65,10 @@ export function argFunction(index: number): <T>(...args: T[]) => Optional<T> {
     };
 }
 
+// TODO: Remove the `any` types here.
+/**
+ * Not currently recommended for use as it uses `any` types.
+ */
 export function curry<T extends (...args: any[]) => any>(fn: T): Curry<[...Parameters<T>, ReturnType<T>]> {
     const { length } = fn;
     return function curried(...args: any[]): any {
